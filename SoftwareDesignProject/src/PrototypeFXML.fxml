@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.AreaChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<TabPane fx:id="tabPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="579.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE" tabMinHeight="40.0" tabMinWidth="249.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PrototypeFXMLController">
+  <tabs>
+    <Tab fx:id="tab1" styleClass="tab_pane" text="Current Statistics">
+      <content>
+        <AnchorPane fx:id="t1_anchorPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <ComboBox fx:id="t1_cb_gas" layoutX="14.0" layoutY="14.0" onAction="#handleT1CbGas" prefHeight="25.0" prefWidth="107.0" promptText="GAS" />
+                  <DatePicker fx:id="t1_datepicker" layoutX="132.0" layoutY="14.0" onAction="#handleT1Datepicker" promptText="TIMEPERIOD" />
+                  <ComboBox fx:id="t1_cb_stations" layoutX="312.0" layoutY="14.0" onAction="#handleT1CbStations" prefHeight="25.0" prefWidth="105.0" promptText="STATIONS" />
+                  <ComboBox fx:id="t1_cb_display" layoutX="424.0" layoutY="14.0" onAction="#handleT1CbDisplay" prefHeight="25.0" prefWidth="110.0" promptText="DISPLAY" />
+                  <Button fx:id="btn_save" layoutX="679.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleSaveBtn" prefHeight="32.0" prefWidth="107.0" styleClass="btn_main" text="SAVE SELECTION" />
+                  <Button fx:id="btn_load" layoutX="563.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleLoadBtn" prefHeight="32.0" prefWidth="110.0" styleClass="btn_main" text="LOAD SELECTION" />
+                  <Text fx:id="t1_txt_select" fill="#686868" layoutX="246.0" layoutY="257.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Please select criteria to draw graphs" textAlignment="CENTER" wrappingWidth="308.6044921875">
+                     <font>
+                        <Font size="33.0" />
+                     </font>
+                  </Text>
+                  <LineChart fx:id="t1_graph1" animated="false" layoutX="26.0" layoutY="101.0" prefHeight="329.0" prefWidth="374.0" visible="false">
+                    <xAxis>
+                      <CategoryAxis side="BOTTOM" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis side="LEFT" />
+                    </yAxis>
+                  </LineChart>
+                  <AreaChart fx:id="t1_graph2" animated="false" layoutX="400.0" layoutY="101.0" prefHeight="329.0" prefWidth="374.0" visible="false">
+                    <xAxis>
+                      <CategoryAxis side="BOTTOM" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis side="LEFT" />
+                    </yAxis>
+                  </AreaChart>
+               </children></AnchorPane>
+      </content>
+    </Tab>
+    <Tab fx:id="tab2" styleClass="tab_pane" text="Historical Statistics">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+      </content>
+    </Tab>
+      <Tab fx:id="tab3" styleClass="tab_pane" text="Compare CO2">
+         <content>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+         </content>
+      </Tab>
+  </tabs>
+</TabPane>

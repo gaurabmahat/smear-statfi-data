@@ -1,0 +1,9 @@
+/* 
+    Created on : Feb 13, 2022, 7:31:52 PM
+    Author     : Roger Wanamo
+*/
+
+.btn_main {
+    -fx-background-color: blue;
+    -fx-text-fill: white;
+}
