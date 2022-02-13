@@ -36,7 +36,7 @@ Create project in IDE:
 
 - Once clone is completed, you will be asked if you want to create an IDE project. Click on Create Project.
 - At the Choose Project page, choose **Java with Ant** and **Java Application**. **IMPORTANT: Do NOT select JavaFX, even if it shows up as an option.**
-- At the Name and Location page, set a name for the project and untick Create Main Class. Click Finish.
+- At the Name and Location page, set Project Name to **SoftwareDesignProject** and untick Create Main Class. Click Finish.
 
 Configure JavaFX in the project:
 
@@ -51,7 +51,7 @@ Now you should be ready to run the project in NetBeans. To try it out with the p
 
 - If not already on the prototype branch, goto Team -> Branch/Tag -> Switch to branch.
 - Select the prototype branch.
-- Locate prototype.java under Source Packages -> default package, right click and select Run File.
+- Locate Prototype.java under Source Packages -> default package, right click and select Run File.
 
 <h2>Useful links</h2>
 
