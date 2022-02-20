@@ -25,6 +25,8 @@ public class PrototypeMain extends Application {
 
             primaryStage.setTitle("Project work Prototype");
             primaryStage.setScene(scene);
+            primaryStage.setMinWidth(1024);
+            primaryStage.setMinHeight(768);
             primaryStage.show();
         } catch (IOException ex) {
             Logger.getLogger(PrototypeMain.class.getName()).log(Level.SEVERE, null, ex);

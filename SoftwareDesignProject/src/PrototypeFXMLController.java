@@ -1,6 +1,7 @@
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.temporal.ChronoUnit;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,6 +11,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
@@ -17,6 +20,8 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 
@@ -36,17 +41,25 @@ public class PrototypeFXMLController implements Initializable {
     @FXML
     private ComboBox<String> t1_cb_gas;
     @FXML
-    private DatePicker t1_datepicker;
+    private DatePicker t1_datePicker_from;
+    @FXML
+    private DatePicker t1_datePicker_to;
     @FXML
     private ComboBox<String> t1_cb_stations;
     @FXML
     private ComboBox<String> t1_cb_display;
     @FXML
+    private Button btn_show;
+    @FXML
     private Button btn_save;
     @FXML
     private Button btn_load;
     @FXML
+    private StackPane t1_txt_pane;
+    @FXML
     private Text t1_txt_select;
+    @FXML
+    private VBox t1_graphBox;
     @FXML
     private LineChart<?, ?> t1_graph1;
     @FXML
@@ -58,7 +71,10 @@ public class PrototypeFXMLController implements Initializable {
     
     private XYChart.Series randomData1;
     private XYChart.Series randomData2;
-    private LocalDate selectedDate;
+    private LocalDate fromDate;
+    private LocalDate toDate;
+    private String selectedGas;
+    private String selectedStation;
 
     /**
      * Initializes the controller class.
@@ -72,9 +88,15 @@ public class PrototypeFXMLController implements Initializable {
         randomData2 = new XYChart.Series();
         randomData2.setName("Data");
         
-        selectedDate = LocalDate.of(2022, Month.JANUARY, 1);
+        fromDate = LocalDate.of(2022, Month.JANUARY, 1);
+        t1_datePicker_from.setValue(LocalDate.of(2022, Month.JANUARY, 1));
+        toDate = LocalDate.now();
+        t1_datePicker_to.setValue(LocalDate.now());
         
-        restrictDatePicker(t1_datepicker, LocalDate.of(2000, Month.JANUARY, 1), LocalDate.now());
+        restrictDatePicker(t1_datePicker_from, LocalDate.of(2000, Month.JANUARY, 1), LocalDate.now());
+        restrictDatePicker(t1_datePicker_to, fromDate, LocalDate.now());
+        
+        t1_graph1.setCreateSymbols(false);
         
         ObservableList<String> gasList = FXCollections.observableArrayList("CO2", "SO2", "NO", "Ozone", "CO2 flux");
         t1_cb_gas.setItems(gasList);
@@ -88,23 +110,27 @@ public class PrototypeFXMLController implements Initializable {
 
     @FXML
     private void handleT1CbGas(ActionEvent event) {
-        t1_graph1.setVisible(true);
-        t1_txt_select.setVisible(false);
-        String gas = t1_cb_gas.getSelectionModel().getSelectedItem();
-        updateGraph(t1_graph1, gas, selectedDate);
+        selectedGas = t1_cb_gas.getSelectionModel().getSelectedItem();
     }
 
     @FXML
-    private void handleT1Datepicker(ActionEvent event) {
-        selectedDate = t1_datepicker.getValue();
+    private void handleT1DatePickerFrom(ActionEvent event) {
+        fromDate = t1_datePicker_from.getValue();
+        if (fromDate.isAfter(toDate)) {
+            toDate = fromDate;
+            t1_datePicker_to.setValue(fromDate);
+        }
+        restrictDatePicker(t1_datePicker_to, fromDate, LocalDate.now());
+    }
+    
+    @FXML
+    private void handleT1DatePickerTo(ActionEvent event) {
+        toDate = t1_datePicker_to.getValue();
     }
 
     @FXML
     private void handleT1CbStations(ActionEvent event) {
-        t1_graph2.setVisible(true);
-        t1_txt_select.setVisible(false);
-        String station = t1_cb_stations.getSelectionModel().getSelectedItem();
-        updateGraph(t1_graph2, station, selectedDate);
+        selectedStation = t1_cb_stations.getSelectionModel().getSelectedItem();
     }
 
     @FXML
@@ -122,18 +148,41 @@ public class PrototypeFXMLController implements Initializable {
     private void handleLoadBtn(ActionEvent event) {
     }
     
+    @FXML
+    private void handleShowBtn(ActionEvent event) {
+        if (selectedGas == null | selectedStation == null) {
+            showAlert("Please select a gas and a station to show data.");
+        }
+        else {
+            t1_graph1.setVisible(true);
+            t1_graph2.setVisible(true);
+            t1_txt_select.setVisible(false);
+            updateGraph(t1_graph1, selectedGas + ", " + selectedStation, fromDate, toDate);
+            updateGraph(t1_graph2, "some other gas", fromDate, toDate);
+        }        
+    }
     
-    public void updateGraph(XYChart<?,?> graph, String name, LocalDate startDate) {
+    
+    public void updateGraph(XYChart<?,?> graph, String name, LocalDate from, LocalDate to) {
         XYChart.Series randomData = new XYChart.Series();
+        long dayDiff = ChronoUnit.DAYS.between(from, to);
         randomData.setName(name);
         graph.getData().clear();
         randomData.getData().clear();
-        for (int i = 0 ; i < 12 ; i++) {
+        for (int i = 0 ; i < dayDiff ; i++) {
             int next = (int)(20 + Math.random()*70);
-            randomData.getData().add(new XYChart.Data(startDate.plusDays(i).toString(), next));
+            randomData.getData().add(new XYChart.Data(from.plusDays(i).toString(), next));
         }
         graph.getData().add(randomData);
-        
+    }
+    
+    public void showAlert(String msg) {
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("");
+            alert.setHeaderText(null);
+            alert.setContentText(msg);
+            
+            alert.showAndWait();
     }
     
     /**
