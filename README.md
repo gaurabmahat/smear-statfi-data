@@ -51,7 +51,7 @@ Now you should be ready to run the project in NetBeans. To try it out with the p
 
 - If not already on the prototype branch, goto Team -> Branch/Tag -> Switch to branch.
 - Select the prototype branch.
-- Locate Prototype.java under Source Packages -> default package, right click and select Run File.
+- Locate PrototypeMain.java under Source Packages -> default package, right click and select Run File.
 
 <h2>Useful links</h2>
 
