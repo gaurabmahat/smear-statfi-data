@@ -1,7 +1,7 @@
 import java.util.List;
 import java.util.Map;
 
-public class ResultSkeleton {
+public class SmearResultJsonObject {
     String aggregation;
     int aggregationInterval;
     List<String> columns;

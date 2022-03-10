@@ -9,7 +9,7 @@ public class Result {
     public Result(String station, String gas) {
         this.station = station;
         this.gas = gas;
-        this.data = new HashMap<>();
+        this.data = new HashMap<LocalDateTime, Double>();
     }
 
     public void addDataEntry(LocalDateTime dateTime, Double value) {
