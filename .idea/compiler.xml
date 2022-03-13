@@ -9,8 +9,5 @@
         <module name="csgr" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="csgr" target="17" />
-    </bytecodeTargetLevel>
   </component>
 </project>

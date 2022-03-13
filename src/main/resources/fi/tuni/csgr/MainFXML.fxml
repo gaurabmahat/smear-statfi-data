@@ -15,15 +15,14 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<TabPane fx:id="tabPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="768.0" minWidth="1024.0" prefHeight="768.0" prefWidth="1024.0" tabClosingPolicy="UNAVAILABLE" tabMinHeight="40.0" tabMinWidth="316.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fi.tuni.csgr.PrototypeFXMLController">
+<?import javafx.scene.control.MenuButton?>
+<TabPane fx:id="tabPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="768.0" minWidth="1024.0" prefHeight="768.0" prefWidth="1024.0" tabClosingPolicy="UNAVAILABLE" tabMinHeight="40.0" tabMinWidth="316.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fi.tuni.csgr.MainFXMLController">
     <tabs>
         <Tab fx:id="tab1" styleClass="tab_pane" text="Current Statistics">
             <content>
                 <AnchorPane fx:id="t1_anchorPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                     <children>
-                        <ComboBox fx:id="t1_cb_gas" layoutX="14.0" layoutY="14.0" onAction="#handleT1CbGas" prefHeight="25.0" prefWidth="107.0" promptText="GAS" />
                         <DatePicker fx:id="t1_datePicker_from" layoutX="132.0" layoutY="14.0" onAction="#handleT1DatePickerFrom" prefHeight="25.0" prefWidth="130.0" promptText="FROM" />
-                        <ComboBox fx:id="t1_cb_stations" layoutX="420.0" layoutY="14.0" onAction="#handleT1CbStations" prefHeight="25.0" prefWidth="105.0" promptText="STATIONS" />
                         <ComboBox fx:id="t1_cb_display" layoutX="536.0" layoutY="14.0" onAction="#handleT1CbDisplay" prefHeight="25.0" prefWidth="110.0" promptText="DISPLAY" />
                         <Button fx:id="btn_save" layoutX="679.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleSaveBtn" prefHeight="32.0" prefWidth="107.0" styleClass="btn-main" text="SAVE SELECTION" AnchorPane.rightAnchor="10.0" />
                         <Button fx:id="btn_load" layoutX="563.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleLoadBtn" prefHeight="32.0" prefWidth="110.0" styleClass="btn-main" text="LOAD SELECTION" AnchorPane.rightAnchor="130.0" />
@@ -58,6 +57,8 @@
                             </children>
                         </VBox>
                         <Button fx:id="btn_show" layoutX="656.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleShowBtn" prefHeight="32.0" prefWidth="110.0" styleClass="btn-main" text="SHOW" />
+                        <MenuButton fx:id="t1_mb_gas" layoutX="26.0" layoutY="14.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="95.0" text="Gas" />
+                        <MenuButton fx:id="t1_mb_stations" layoutX="419.0" layoutY="14.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="107.0" text="Stations" />
                     </children></AnchorPane>
             </content>
         </Tab>

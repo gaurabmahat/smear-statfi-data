@@ -4,7 +4,12 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ResourceBundle;
+
+import fi.tuni.csgr.utils.DatePickerUtils;
+import fi.tuni.csgr.utils.MenuUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,26 +18,20 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Alert;
+import javafx.scene.chart.XYChart.Series;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DateCell;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.util.Callback;
 
 /**
  * FXML Controller class
  *
  * @author Roger Wanamo
  */
-public class PrototypeFXMLController implements Initializable {
+public class MainFXMLController implements Initializable {
 
     @FXML
     private TabPane tabPane;
@@ -41,13 +40,13 @@ public class PrototypeFXMLController implements Initializable {
     @FXML
     private AnchorPane t1_anchorPane;
     @FXML
-    private ComboBox<String> t1_cb_gas;
+    private MenuButton t1_mb_gas;
     @FXML
     private DatePicker t1_datePicker_from;
     @FXML
     private DatePicker t1_datePicker_to;
     @FXML
-    private ComboBox<String> t1_cb_stations;
+    private MenuButton t1_mb_stations;
     @FXML
     private ComboBox<String> t1_cb_display;
     @FXML
@@ -71,12 +70,13 @@ public class PrototypeFXMLController implements Initializable {
     @FXML
     private Tab tab3;
 
-    private XYChart.Series randomData1;
-    private XYChart.Series randomData2;
+    private ArrayList<String> selectedGases = new ArrayList<>();
+    private ArrayList<String> selectedStations = new ArrayList<>();
+
+    private Series<?,?> randomData1;
+    private Series<?,?> randomData2;
     private LocalDate fromDate;
     private LocalDate toDate;
-    private String selectedGas;
-    private String selectedStation;
 
     /**
      * Initializes the controller class.
@@ -84,35 +84,30 @@ public class PrototypeFXMLController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        randomData1 = new XYChart.Series();
+        randomData1 = new Series<>();
         randomData1.setName("Data");
 
-        randomData2 = new XYChart.Series();
+        randomData2 = new Series<>();
         randomData2.setName("Data");
 
-        fromDate = LocalDate.of(2022, Month.JANUARY, 1);
-        t1_datePicker_from.setValue(LocalDate.of(2022, Month.JANUARY, 1));
+        fromDate = LocalDate.now().minusDays(2);
+        t1_datePicker_from.setValue(LocalDate.now().minusDays(2));
         toDate = LocalDate.now();
         t1_datePicker_to.setValue(LocalDate.now());
 
-        restrictDatePicker(t1_datePicker_from, LocalDate.of(2000, Month.JANUARY, 1), LocalDate.now());
-        restrictDatePicker(t1_datePicker_to, fromDate, LocalDate.now());
+        DatePickerUtils.restrictDatePicker(t1_datePicker_from, LocalDate.of(2000, Month.JANUARY, 1), LocalDate.now());
+        DatePickerUtils.restrictDatePicker(t1_datePicker_to, fromDate, LocalDate.now());
 
         t1_graph1.setCreateSymbols(false);
 
-        ObservableList<String> gasList = FXCollections.observableArrayList("CO2", "SO2", "NO", "Ozone", "CO2 flux");
-        t1_cb_gas.setItems(gasList);
+        ArrayList<String> gasList = new ArrayList<String>(Arrays.asList("CO2", "SO2", "NO", "Ozone", "CO2 flux"));
+        selectedGases = MenuUtils.createCheckboxMenuItems(gasList, t1_mb_gas, "Gas");
 
-        ObservableList<String> stationList = FXCollections.observableArrayList("Kumpula", "Vaario", "Hyytiala");
-        t1_cb_stations.setItems(stationList);
+        ArrayList<String> stationList = new ArrayList<String>(Arrays.asList("Kumpula", "Vaario", "Hyytiala"));
+        selectedStations = MenuUtils.createCheckboxMenuItems(stationList, t1_mb_stations, "Gas");
 
         ObservableList<String> displayList = FXCollections.observableArrayList("selection", "average", "selection", "selection");
         t1_cb_display.setItems(displayList);
-    }
-
-    @FXML
-    private void handleT1CbGas(ActionEvent event) {
-        selectedGas = t1_cb_gas.getSelectionModel().getSelectedItem();
     }
 
     @FXML
@@ -122,17 +117,12 @@ public class PrototypeFXMLController implements Initializable {
             toDate = fromDate;
             t1_datePicker_to.setValue(fromDate);
         }
-        restrictDatePicker(t1_datePicker_to, fromDate, LocalDate.now());
+        DatePickerUtils.restrictDatePicker(t1_datePicker_to, fromDate, LocalDate.now());
     }
 
     @FXML
     private void handleT1DatePickerTo(ActionEvent event) {
         toDate = t1_datePicker_to.getValue();
-    }
-
-    @FXML
-    private void handleT1CbStations(ActionEvent event) {
-        selectedStation = t1_cb_stations.getSelectionModel().getSelectedItem();
     }
 
     @FXML
@@ -152,26 +142,26 @@ public class PrototypeFXMLController implements Initializable {
 
     @FXML
     private void handleShowBtn(ActionEvent event) {
-        if (selectedGas == null | selectedStation == null) {
+        if (selectedGases.isEmpty() | selectedStations.isEmpty()) {
             showAlert("Please select a gas and a station to show data.");
         }
         else {
             t1_graph1.setVisible(true);
             t1_graph2.setVisible(true);
             t1_txt_select.setVisible(false);
-            updateGraph(t1_graph1, selectedGas + ", " + selectedStation, fromDate, toDate);
+            updateGraph(t1_graph1, selectedGases.get(0) + ", " + selectedStations.get(0), fromDate, toDate);
             updateGraph(t1_graph2, "some other gas", fromDate, toDate);
         }
     }
 
 
     public void updateGraph(XYChart<?,?> graph, String name, LocalDate from, LocalDate to) {
-        XYChart.Series randomData = new XYChart.Series();
+        Series randomData = new Series<>();
         long dayDiff = ChronoUnit.DAYS.between(from, to);
         randomData.setName(name);
         graph.getData().clear();
         randomData.getData().clear();
-        for (int i = 0 ; i < dayDiff ; i++) {
+        for (int i = 0 ; i <= dayDiff ; i++) {
             int next = (int)(20 + Math.random()*70);
             randomData.getData().add(new XYChart.Data(from.plusDays(i).toString(), next));
         }
@@ -185,34 +175,6 @@ public class PrototypeFXMLController implements Initializable {
         alert.setContentText(msg);
 
         alert.showAndWait();
-    }
-
-    /**
-     * Restricts selectable dates on datePicker to allow only dates from minDate to maxDate.
-     * @param datePicker
-     * @param minDate
-     * @param maxDate
-     */
-    public void restrictDatePicker(DatePicker datePicker, LocalDate minDate, LocalDate maxDate) {
-        final Callback<DatePicker, DateCell> dayCellFactory = new Callback<DatePicker, DateCell>() {
-            @Override
-            public DateCell call(final DatePicker datePicker) {
-                return new DateCell() {
-                    @Override
-                    public void updateItem(LocalDate item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (item.isBefore(minDate)) {
-                            setDisable(true);
-                            setStyle("-fx-background-color: #ffc0cb;");
-                        }else if (item.isAfter(maxDate)) {
-                            setDisable(true);
-                            setStyle("-fx-background-color: #ffc0cb;");
-                        }
-                    }
-                };
-            }
-        };
-        datePicker.setDayCellFactory(dayCellFactory);
     }
 }
 
