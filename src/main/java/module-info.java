@@ -1,0 +1,13 @@
+module fi.tuni.csgr {
+    requires javafx.controls;
+    requires javafx.fxml;
+
+    requires org.controlsfx.controls;
+    requires com.dlsc.formsfx;
+    requires org.kordamp.bootstrapfx.core;
+    requires java.logging;
+    requires com.google.gson;
+
+    opens fi.tuni.csgr to javafx.fxml;
+    exports fi.tuni.csgr;
+}

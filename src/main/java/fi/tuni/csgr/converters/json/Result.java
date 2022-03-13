@@ -1,3 +1,5 @@
+package fi.tuni.csgr.converters.json;
+
 import java.time.LocalDateTime;
 import java.util.HashMap;
 

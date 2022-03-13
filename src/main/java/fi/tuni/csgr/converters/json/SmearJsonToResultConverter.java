@@ -1,3 +1,5 @@
+package fi.tuni.csgr.converters.json;
+
 import com.google.gson.Gson;
 
 import java.time.LocalDateTime;
@@ -25,6 +27,16 @@ public class SmearJsonToResultConverter implements JsonToResultConverter {
     private static SmearResultJsonObject getObjectFromJson(String json){
         Gson gson = new Gson();
         return gson.fromJson(json, SmearResultJsonObject.class);
+    }
+
+    private class SmearResultJsonObject {
+        String aggregation;
+        int aggregationInterval;
+        List<String> columns;
+        List<Map<String, Object>> data;
+        String endTime;
+        int recordCount;
+        String startTime;
     }
 
     public List<Result> convert(String json){
@@ -61,3 +73,4 @@ public class SmearJsonToResultConverter implements JsonToResultConverter {
 
 
 }
+
