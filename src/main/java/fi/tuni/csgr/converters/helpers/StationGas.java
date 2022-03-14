@@ -1,4 +1,4 @@
-package fi.tuni.csgr.converters.json;
+package fi.tuni.csgr.converters.helpers;
 
 import java.util.Objects;
 

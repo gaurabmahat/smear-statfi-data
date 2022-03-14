@@ -1,21 +1,24 @@
 package fi.tuni.csgr.converters.json;
 
+import fi.tuni.csgr.converters.helpers.StationGas;
+
 import java.util.*;
 
-public class ResultList implements Iterable<SGResult>{
+public class SGResultList implements Iterable<SGResult>{
     private HashMap<StationGas, SGResult> results;
 
-    public ResultList() {
+    public SGResultList() {
         this.results = new HashMap<>();
     }
 
-    public void addResult(String station, String gas, SGResult SGResult){
+    public void addResult(StationGas stationGas, SGResult SGResult){
         results.put(
-                new StationGas(station, gas),
+                stationGas,
                 SGResult
         );
     }
 
+    //todo:
     @Override
     public Iterator<SGResult> iterator() {
         return null;

@@ -1,20 +1,20 @@
 package fi.tuni.csgr.converters.slug;
 
-import fi.tuni.csgr.converters.json.StationGas;
+import fi.tuni.csgr.converters.helpers.StationGas;
 
 import java.util.Map;
 
 public class StationGasSlugConverter {
-    private static final Map<String, String[]> slugToStationGasMapping = Map.of(
-            "KUM_EDDY.av_c_ep", new String[] {"Kumpula", "CO2"},
-            "KUM_META.SO_2", new String[] {"Kumpula", "SO2"},
-            "KUM_META.NO", new String[] {"Kumpula", "NO"},
-            "HYY_META.CO2icos168", new String[] {"Hyytiälä", "CO2"},
-            "HYY_META.SO2168", new String[] {"Hyytiälä", "SO2"},
-            "HYY_META.NO168", new String[] {"Hyytiälä", "NO"},
-            "VAR_EDDY.av_c", new String[] {"Värriö", "CO2"},
-            "VAR_META.SO2_1", new String[] {"Värriö", "SO2"},
-            "VAR_META.NO_1", new String[] {"Värriö", "NO"}
+    private static final Map<String, StationGas> slugToStationGasMapping = Map.of(
+            "KUM_EDDY.av_c_ep", new StationGas("Kumpula", "CO2"),
+            "KUM_META.SO_2", new StationGas("Kumpula", "SO2"),
+            "KUM_META.NO", new StationGas("Kumpula", "NO"),
+            "HYY_META.CO2icos168", new StationGas("Hyytiälä", "CO2"),
+            "HYY_META.SO2168", new StationGas("Hyytiälä", "SO2"),
+            "HYY_META.NO168", new StationGas("Hyytiälä", "NO"),
+            "VAR_EDDY.av_c", new StationGas("Värriö", "CO2"),
+            "VAR_META.SO2_1", new StationGas("Värriö", "SO2"),
+            "VAR_META.NO_1", new StationGas("Värriö", "NO")
 
     );
 
@@ -35,7 +35,7 @@ public class StationGasSlugConverter {
         return stationGasToSlugMapping.get(new StationGas(stationName, gas));
     }
 
-    public static String[] getStationGas(String slug){
+    public static StationGas getStationGas(String slug){
         return slugToStationGasMapping.get(slug);
     }
 }
