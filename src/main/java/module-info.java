@@ -7,6 +7,7 @@ module fi.tuni.csgr {
     requires org.kordamp.bootstrapfx.core;
     requires java.logging;
     requires com.google.gson;
+    requires java.net.http;
 
     opens fi.tuni.csgr to javafx.fxml;
     exports fi.tuni.csgr;
