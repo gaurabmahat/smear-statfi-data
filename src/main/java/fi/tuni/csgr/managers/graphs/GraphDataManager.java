@@ -22,8 +22,8 @@ public class GraphDataManager {
     }
 
     /**
-     * updates the stored data with
-     * @param results
+     * updates the stored data with fetched results
+     * @param results results as ResultList
      */
     public void update(ResultList results){
         List<String> resultGases = results.getGases();
@@ -55,14 +55,29 @@ public class GraphDataManager {
         }
     }
 
+    /**
+     * adds listener to the main map storing all result gases
+     * @param listener
+     */
     public void addMainListener(MapChangeListener listener){
         gases.addListener(listener);
     }
 
+    /**
+     * adds listener to the map storing all stations for specified gas
+     * @param gas
+     * @param listener
+     */
     public void addGasListener(String gas, MapChangeListener listener){
         gases.get(gas).addListener(listener);
     }
 
+    /**
+     * adds listener to the list storing results for the specified gas and station
+     * @param gas
+     * @param station
+     * @param listener
+     */
     public void addGasStationListener(String gas, String station, ListChangeListener listener){
         gases.get(gas).get(station).addListener(listener);
     }
