@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 
+import fi.tuni.csgr.managers.graphs.GraphDataManager;
 import fi.tuni.csgr.utils.DatePickerUtils;
 import fi.tuni.csgr.utils.MenuUtils;
 import javafx.collections.FXCollections;
@@ -78,11 +79,15 @@ public class MainFXMLController implements Initializable {
     private LocalDate fromDate;
     private LocalDate toDate;
 
+    private GraphDataManager graphDataManager;
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
+        graphDataManager = new GraphDataManager();
 
         randomData1 = new Series<>();
         randomData1.setName("Data");
