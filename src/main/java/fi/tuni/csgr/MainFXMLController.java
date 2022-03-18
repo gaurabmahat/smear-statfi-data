@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.ResourceBundle;
 
 import fi.tuni.csgr.managers.graphs.GraphDataManager;
+import fi.tuni.csgr.network.Network;
+import fi.tuni.csgr.network.SmearNetwork;
 import fi.tuni.csgr.utils.DatePickerUtils;
 import fi.tuni.csgr.utils.MenuUtils;
 import javafx.collections.FXCollections;
@@ -80,6 +82,7 @@ public class MainFXMLController implements Initializable {
     private LocalDate toDate;
 
     private GraphDataManager graphDataManager;
+    private Network smearNetwork = new SmearNetwork(graphDataManager);
 
     /**
      * Initializes the controller class.
