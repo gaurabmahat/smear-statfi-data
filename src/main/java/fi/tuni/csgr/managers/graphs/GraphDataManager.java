@@ -7,11 +7,24 @@ import javafx.scene.chart.XYChart;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class GraphManager {
+/**
+ * Class for managing all data displayed on graphs
+ *
+ * @author Cecylia Borek
+ */
 
-    ObservableMap<String, ObservableMap<String, ObservableList<XYChart.Data<LocalDateTime, Double>>>> gases =
-            FXCollections.observableMap(new HashMap<>());
+public class GraphDataManager {
 
+    ObservableMap<String, ObservableMap<String, ObservableList<XYChart.Data<LocalDateTime, Double>>>> gases;
+
+    public GraphDataManager(){
+        this.gases = FXCollections.observableMap(new HashMap<>());
+    }
+
+    /**
+     * updates the stored data with
+     * @param results
+     */
     public void update(ResultList results){
         List<String> resultGases = results.getGases();
         List<String> currentGases = gases.keySet().stream().toList();
@@ -35,7 +48,11 @@ public class GraphManager {
             removeOldStationsForGas(gas, stationsDiff.getToRemove());
             addNewStationsForGas(gas, stationsDiff.getToAdd());
         }
-
+        for (String gas: gases.keySet()){
+            for (String station: gases.get(gas).keySet()){
+                updateGasStationResults(results, station, gas);
+            }
+        }
     }
 
     public void addMainListener(MapChangeListener listener){
@@ -50,15 +67,11 @@ public class GraphManager {
         gases.get(gas).get(station).addListener(listener);
     }
 
-    private void updateResults(ResultList resultList, String station, String gas){
-        ArrayList<XYChart.Data<LocalDateTime, Double>> data = new ArrayList<>();
-        for(Map.Entry<LocalDateTime, Double> dataEntry: resultList.getSGResult(station, gas).getData().entrySet()){
-            XYChart.Data<LocalDateTime, Double> dataPoint = new XYChart.Data<>(
-                    dataEntry.getKey(),
-                    dataEntry.getValue()
-            );
-            data.add(dataPoint);
-        }
+    private void updateGasStationResults(ResultList resultList, String station, String gas){
+        ArrayList<XYChart.Data<LocalDateTime, Double>> data = getXYChartDataList(
+                resultList.getSGResult(station, gas).getData()
+        );
+
         ObservableList<XYChart.Data<LocalDateTime, Double>> gasStationResultList = gases.get(gas).get(station);
         gasStationResultList.clear();
         gasStationResultList.addAll(data);
@@ -98,10 +111,10 @@ public class GraphManager {
         return new DiffResult(toAdd, toRemove);
     }
 
-    private List<XYChart.Data> getXYChartData(Map<LocalDateTime, Double> data){
-        List<XYChart.Data> xyChartData = new ArrayList<>();
-        for(Map.Entry dataEntry: data.entrySet()){
-            XYChart.Data xy = new XYChart.Data(
+    private ArrayList<XYChart.Data<LocalDateTime, Double>> getXYChartDataList(Map<LocalDateTime, Double> data){
+        ArrayList<XYChart.Data<LocalDateTime, Double>> xyChartData = new ArrayList<>();
+        for(Map.Entry<LocalDateTime, Double> dataEntry: data.entrySet()){
+            XYChart.Data<LocalDateTime, Double> xy = new XYChart.Data(
                     dataEntry.getKey(),
                     dataEntry.getValue());
             xyChartData.add(xy);
