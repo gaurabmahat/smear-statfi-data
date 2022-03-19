@@ -11,4 +11,6 @@ module fi.tuni.csgr {
 
     opens fi.tuni.csgr to javafx.fxml;
     exports fi.tuni.csgr;
+    exports fi.tuni.csgr.managers.graphs;
+    opens fi.tuni.csgr.managers.graphs to javafx.fxml;
 }

@@ -4,10 +4,10 @@ import fi.tuni.csgr.converters.helpers.StationGas;
 
 import java.util.*;
 
-public class SGResultList implements Iterable<SGResult>{
+public class ResultList implements Iterable<SGResult>{
     private HashMap<StationGas, SGResult> results;
 
-    public SGResultList() {
+    public ResultList() {
         this.results = new HashMap<>();
     }
 
@@ -30,5 +30,24 @@ public class SGResultList implements Iterable<SGResult>{
 
     public SGResult getSGResult(String station, String gas){
         return results.get(new StationGas(station, gas));
+    }
+
+    public List<String> getGases(){
+        Set<String> gases = new HashSet<>();
+        for(StationGas sg: results.keySet()){
+            gases.add(sg.getGas());
+        }
+        return gases.stream().toList();
+    }
+
+    public List<String> getStationsForGas(String gas){
+        Set<String> stations = new HashSet<>();
+        for(StationGas sg: results.keySet()){
+            if (sg.getGas().equals(gas)){
+                stations.add(sg.getStation());
+            }
+
+        }
+        return stations.stream().toList();
     }
 }
