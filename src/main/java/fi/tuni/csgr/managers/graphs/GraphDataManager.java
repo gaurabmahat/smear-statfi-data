@@ -119,9 +119,9 @@ public class GraphDataManager {
     }
 
     private DiffResult getDiff(List<String> currentKeys, List<String> newKeys){
-        List<String> toAdd = newKeys;
+        ArrayList<String> toAdd = new ArrayList<>(newKeys);
         toAdd.removeAll(currentKeys);
-        List<String> toRemove = currentKeys;
+        ArrayList<String> toRemove = new ArrayList(currentKeys);
         toRemove.removeAll(newKeys);
         return new DiffResult(toAdd, toRemove);
     }

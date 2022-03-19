@@ -2,10 +2,12 @@ package fi.tuni.csgr;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import fi.tuni.csgr.managers.graphs.GraphDataManager;
@@ -28,6 +30,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+
+import static fi.tuni.csgr.stationNames.stationNameMapping.mapStationAndGas;
 
 /**
  * FXML Controller class
@@ -82,7 +86,7 @@ public class MainFXMLController implements Initializable {
     private LocalDate toDate;
 
     private GraphDataManager graphDataManager;
-    private Network smearNetwork = new SmearNetwork(graphDataManager);
+    private Network smearNetwork;
 
     /**
      * Initializes the controller class.
@@ -91,6 +95,7 @@ public class MainFXMLController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         graphDataManager = new GraphDataManager();
+        smearNetwork = new SmearNetwork(graphDataManager);
 
         randomData1 = new Series<>();
         randomData1.setName("Data");
@@ -108,11 +113,13 @@ public class MainFXMLController implements Initializable {
 
         t1_graph1.setCreateSymbols(false);
 
-        ArrayList<String> gasList = new ArrayList<String>(Arrays.asList("CO2", "SO2", "NO", "Ozone", "CO2 flux"));
-        selectedGases = MenuUtils.createCheckboxMenuItems(gasList, t1_mb_gas, "Gas");
+        ArrayList<String> stationList = new ArrayList<>();
+        mapStationAndGas.forEach((k,v) -> stationList.add(k) );
+        selectedStations = MenuUtils.createCheckboxMenuItems(stationList, t1_mb_stations, "Station");
 
-        ArrayList<String> stationList = new ArrayList<String>(Arrays.asList("Kumpula", "Vaario", "Hyytiala"));
-        selectedStations = MenuUtils.createCheckboxMenuItems(stationList, t1_mb_stations, "Gas");
+        ArrayList<String> gasList = new ArrayList<>();
+        mapStationAndGas.get(stationList.get(0)).forEach((k,v) -> gasList.add(k));
+        selectedGases = MenuUtils.createCheckboxMenuItems(gasList, t1_mb_gas, "Gas");
 
         ObservableList<String> displayList = FXCollections.observableArrayList("selection", "average", "selection", "selection");
         t1_cb_display.setItems(displayList);
@@ -150,16 +157,9 @@ public class MainFXMLController implements Initializable {
 
     @FXML
     private void handleShowBtn(ActionEvent event) {
-        if (selectedGases.isEmpty() | selectedStations.isEmpty()) {
-            showAlert("Please select a gas and a station to show data.");
-        }
-        else {
-            t1_graph1.setVisible(true);
-            t1_graph2.setVisible(true);
-            t1_txt_select.setVisible(false);
-            updateGraph(t1_graph1, selectedGases.get(0) + ", " + selectedStations.get(0), fromDate, toDate);
-            updateGraph(t1_graph2, "some other gas", fromDate, toDate);
-        }
+        LocalDateTime from = fromDate.atStartOfDay();
+        LocalDateTime to = toDate.atStartOfDay();
+        smearNetwork.getData(from, to, "MAX", selectedGases, selectedStations);
     }
 
 
