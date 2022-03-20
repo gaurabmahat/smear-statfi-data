@@ -4,25 +4,22 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
+import fi.tuni.csgr.components.ChartView;
 import fi.tuni.csgr.managers.graphs.GraphDataManager;
 import fi.tuni.csgr.network.Network;
 import fi.tuni.csgr.network.SmearNetwork;
 import fi.tuni.csgr.utils.DatePickerUtils;
 import fi.tuni.csgr.utils.MenuUtils;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
+import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.chart.AreaChart;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.XYChart;
+import javafx.scene.chart.*;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
@@ -47,6 +44,8 @@ public class MainFXMLController implements Initializable {
     @FXML
     private AnchorPane t1_anchorPane;
     @FXML
+    private ScrollPane t1_scrollPane;
+    @FXML
     private MenuButton t1_mb_gas;
     @FXML
     private DatePicker t1_datePicker_from;
@@ -69,10 +68,6 @@ public class MainFXMLController implements Initializable {
     @FXML
     private VBox t1_graphBox;
     @FXML
-    private LineChart<?, ?> t1_graph1;
-    @FXML
-    private AreaChart<?, ?> t1_graph2;
-    @FXML
     private Tab tab2;
     @FXML
     private Tab tab3;
@@ -80,8 +75,8 @@ public class MainFXMLController implements Initializable {
     private ArrayList<String> selectedGases = new ArrayList<>();
     private ArrayList<String> selectedStations = new ArrayList<>();
 
-    private Series<?,?> randomData1;
-    private Series<?,?> randomData2;
+    private Map<String, ChartView> charts;
+
     private LocalDate fromDate;
     private LocalDate toDate;
 
@@ -93,15 +88,14 @@ public class MainFXMLController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        t1_scrollPane.prefWidthProperty().bind(Bindings.add(-38, t1_anchorPane.widthProperty()));
+        t1_scrollPane.prefHeightProperty().bind(Bindings.add(-65, t1_anchorPane.heightProperty()));
+
+        charts = new HashMap<>();
 
         graphDataManager = new GraphDataManager();
         smearNetwork = new SmearNetwork(graphDataManager);
-
-        randomData1 = new Series<>();
-        randomData1.setName("Data");
-
-        randomData2 = new Series<>();
-        randomData2.setName("Data");
+        addGraphListeners(graphDataManager);
 
         fromDate = LocalDate.now().minusDays(2);
         t1_datePicker_from.setValue(LocalDate.now().minusDays(2));
@@ -111,8 +105,6 @@ public class MainFXMLController implements Initializable {
         DatePickerUtils.restrictDatePicker(t1_datePicker_from, LocalDate.of(2000, Month.JANUARY, 1), LocalDate.now());
         DatePickerUtils.restrictDatePicker(t1_datePicker_to, fromDate, LocalDate.now());
 
-        t1_graph1.setCreateSymbols(false);
-
         ArrayList<String> stationList = new ArrayList<>();
         mapStationAndGas.forEach((k,v) -> stationList.add(k) );
         selectedStations = MenuUtils.createCheckboxMenuItems(stationList, t1_mb_stations, "Station");
@@ -121,8 +113,51 @@ public class MainFXMLController implements Initializable {
         mapStationAndGas.get(stationList.get(0)).forEach((k,v) -> gasList.add(k));
         selectedGases = MenuUtils.createCheckboxMenuItems(gasList, t1_mb_gas, "Gas");
 
-        ObservableList<String> displayList = FXCollections.observableArrayList("selection", "average", "selection", "selection");
+        // Not yet implemented
+        ObservableList<String> displayList = FXCollections.observableArrayList("selection", "selection", "selection", "selection");
         t1_cb_display.setItems(displayList);
+    }
+
+    /**
+     * Adds listeners to graphDataManager
+     *
+     * @param graphDataManager
+     */
+    private void addGraphListeners(GraphDataManager graphDataManager) {
+        MapChangeListener mainListener = new MapChangeListener() {
+            @Override
+            public void onChanged(Change change) {
+                String name = change.getKey().toString();
+                if(change.wasRemoved()) {
+                    t1_graphBox.getChildren().remove(charts.get(name).getChartBox());
+                    charts.remove(name);
+                }
+                if(change.wasAdded()) {
+                    charts.put(name, new ChartView(name));
+                    t1_graphBox.getChildren().add(charts.get(name).getChartBox());
+                    MapChangeListener gasListener = new MapChangeListener() {
+                        private String gas;
+                        @Override
+                        public void onChanged(Change change) {
+                            if (change.wasRemoved()) {
+                                charts.get(gas).removeSeries(change.getKey().toString());
+                            }
+                            if(change.wasAdded()) {
+                                Series data = new Series(change.getKey().toString(), (ObservableList<XYChart.Data>) change.getValueAdded());
+                                charts.get(gas).addSeries(data);
+                            }
+                        }
+
+                        private MapChangeListener init(String gas) {
+                            this.gas = gas;
+                            return this;
+                        }
+                    }.init(change.getKey().toString());
+                    graphDataManager.addGasListener(change.getKey().toString(), gasListener);
+                }
+            }
+        };
+        graphDataManager.addMainListener(mainListener);
     }
 
     @FXML
@@ -146,8 +181,6 @@ public class MainFXMLController implements Initializable {
 
     @FXML
     private void handleSaveBtn(ActionEvent event) {
-        t1_graph1.setVisible(false);
-        t1_graph2.setVisible(false);
         t1_txt_select.setVisible(true);
     }
 
@@ -157,23 +190,15 @@ public class MainFXMLController implements Initializable {
 
     @FXML
     private void handleShowBtn(ActionEvent event) {
-        LocalDateTime from = fromDate.atStartOfDay();
-        LocalDateTime to = toDate.atStartOfDay();
-        smearNetwork.getData(from, to, "MAX", selectedGases, selectedStations);
-    }
-
-
-    public void updateGraph(XYChart<?,?> graph, String name, LocalDate from, LocalDate to) {
-        Series randomData = new Series<>();
-        long dayDiff = ChronoUnit.DAYS.between(from, to);
-        randomData.setName(name);
-        graph.getData().clear();
-        randomData.getData().clear();
-        for (int i = 0 ; i <= dayDiff ; i++) {
-            int next = (int)(20 + Math.random()*70);
-            randomData.getData().add(new XYChart.Data(from.plusDays(i).toString(), next));
+        if (selectedGases.isEmpty() | selectedStations.isEmpty()) {
+            showAlert("Please select a gas and a station to show data.");
         }
-        graph.getData().add(randomData);
+        else {
+            LocalDateTime from = fromDate.atStartOfDay();
+            LocalDateTime to = toDate.atTime(23, 59);
+            smearNetwork.getData(from, to, "MAX", selectedGases, selectedStations);
+            t1_txt_select.setVisible(false);
+        }
     }
 
     public void showAlert(String msg) {

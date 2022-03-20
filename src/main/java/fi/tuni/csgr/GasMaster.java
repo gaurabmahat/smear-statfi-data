@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
-import static javafx.application.Application.launch;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -29,6 +27,7 @@ public class GasMaster extends Application {
             primaryStage.setScene(scene);
             primaryStage.setMinWidth(1024);
             primaryStage.setMinHeight(768);
+            primaryStage.setMaximized(true);
             primaryStage.show();
         } catch (IOException ex) {
             Logger.getLogger(GasMaster.class.getName()).log(Level.SEVERE, null, ex);

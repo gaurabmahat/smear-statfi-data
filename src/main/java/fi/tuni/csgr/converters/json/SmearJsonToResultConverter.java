@@ -5,6 +5,8 @@ import fi.tuni.csgr.converters.helpers.StationGas;
 import fi.tuni.csgr.converters.slug.StationGasSlugConverter;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
@@ -31,10 +33,14 @@ public class SmearJsonToResultConverter implements JsonToResultConverter {
             SGResult newSGResult = new SGResult();
             for(Map dataSample: getData(jsonMap)){
                 Double value = (Double) dataSample.get(slug);
-                LocalDateTime dateTime = LocalDateTime.
-                        parse((CharSequence) dataSample.get("samptime"),
-                                DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-                newSGResult.addDataEntry(dateTime, value);
+                if (value != null) {
+                    LocalDateTime dateTime = LocalDateTime.
+                            parse((CharSequence) dataSample.get("samptime"),
+                                    DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                    ZonedDateTime zdt = ZonedDateTime.of(dateTime, ZoneId.systemDefault());
+                    long dateAsLong = zdt.toInstant().toEpochMilli();
+                    newSGResult.addDataEntry(dateAsLong, value);
+                }
             }
             ResultList.addResult(stationGas, newSGResult);
         }
