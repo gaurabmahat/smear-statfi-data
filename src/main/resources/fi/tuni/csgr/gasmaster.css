@@ -23,3 +23,12 @@
 .default-color0.chart-area-symbol { 
     -fx-background-color: #dda0dd, #d8bfd855; 
 }
+
+.graph-title {
+    -fx-font-size: 2em;
+    -fx-font-weight: bold;
+}
+
+.chart-box {
+    -fx-padding: 10;
+}

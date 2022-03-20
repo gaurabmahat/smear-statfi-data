@@ -1,17 +1,16 @@
 package fi.tuni.csgr.converters.json;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 
 public class SGResult {
 
-    HashMap<LocalDateTime, Double> data;
+    HashMap<Long, Double> data;
 
     public SGResult() {
-        this.data = new HashMap<LocalDateTime, Double>();
+        this.data = new HashMap<Long, Double>();
     }
 
-    public HashMap<LocalDateTime, Double> getData() {
+    public HashMap<Long, Double> getData() {
         return data;
     }
 
@@ -20,7 +19,7 @@ public class SGResult {
         return data.toString();
     }
 
-    public void addDataEntry(LocalDateTime dateTime, Double value) {
+    public void addDataEntry(Long dateTime, Double value) {
         data.put(dateTime, value);
     }
 }
