@@ -4,7 +4,7 @@ import fi.tuni.csgr.converters.helpers.StationGas;
 
 import java.util.*;
 
-public class ResultList implements Iterable<SGResult>{
+public class ResultList {
     private HashMap<StationGas, SGResult> results;
 
     public ResultList() {
@@ -16,12 +16,6 @@ public class ResultList implements Iterable<SGResult>{
                 stationGas,
                 SGResult
         );
-    }
-
-    //todo:
-    @Override
-    public Iterator<SGResult> iterator() {
-        return null;
     }
 
     public int size(){
