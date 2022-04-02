@@ -46,10 +46,10 @@ public class getTableVariable {
 
     //To test the class
     public static void main(String[] args){
-        List<String> a = Arrays.asList(new String[]{"CO2", "SO2"});
+        /*List<String> a = Arrays.asList(new String[]{"CO2", "SO2"});
         List<String> b = Arrays.asList(new String[]{"Kumpula"});
 
-        System.out.println(new getTableVariable(a,b).getStationsCode());
+        System.out.println(new getTableVariable(a,b).getStationsCode());*/
     }
 
 }

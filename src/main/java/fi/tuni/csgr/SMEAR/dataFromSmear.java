@@ -40,7 +40,7 @@ public class dataFromSmear implements IGetData{
 
     //To test the class
     public static void main(String[] args){
-        String startTime = "2022-01-20T01:00:00.000";
+        /*String startTime = "2022-01-20T01:00:00.000";
         String endTime = "2022-01-20T02:00:00.000";
         String value = "MAX";
 
@@ -48,6 +48,6 @@ public class dataFromSmear implements IGetData{
         List<String> gases = Arrays.asList(new String[]{"CO2", "NO", "SO2"});
         List<String> stations = Arrays.asList(new String[]{"Kumpula", "Hyytiälä", "Värriö"});
 
-        System.out.println(new dataFromSmear(startTime, endTime, value, gases, stations).getDataInStringJson());
+        System.out.println(new dataFromSmear(startTime, endTime, value, gases, stations).getDataInStringJson());*/
     }
 }
