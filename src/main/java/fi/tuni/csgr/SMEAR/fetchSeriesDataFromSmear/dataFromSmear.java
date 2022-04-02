@@ -1,13 +1,12 @@
-package fi.tuni.csgr.SMEAR;
+package fi.tuni.csgr.SMEAR.fetchSeriesDataFromSmear;
 
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Arrays;
 import java.util.List;
 
-public class dataFromSmear implements IGetData{
+public class dataFromSmear implements IGetData {
     private String startTime;   //Date
     private String endTime;     //Date
     private String value;       //MIN, MAX, ARITHMETIC

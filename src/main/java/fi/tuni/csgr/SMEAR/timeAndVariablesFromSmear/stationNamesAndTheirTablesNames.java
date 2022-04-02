@@ -1,4 +1,4 @@
-package fi.tuni.csgr.SMEAR;
+package fi.tuni.csgr.SMEAR.timeAndVariablesFromSmear;
 
 import java.util.Arrays;
 import java.util.List;
