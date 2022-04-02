@@ -1,0 +1,59 @@
+{
+    "class": "dataset",
+    "label": "Environmental Accounting: Key Figures by Tiedot and Vuosi",
+    "source": "Statistics Finland",
+    "updated": "2012-06-26T06:00:00Z",
+    "id": [
+        "Tiedot",
+        "Vuosi"
+    ],
+    "size": [
+        2,
+        2
+    ],
+    "dimension": {
+        "Tiedot": {
+            "label": "Tiedot",
+            "category": {
+                "index": {
+                    "Khk_yht_index": 0,
+                    "Khk_yht_las_index": 1
+                },
+                "label": {
+                    "Khk_yht_index": "Greenhouse gas emissions, indexed, year 1990 = 100",
+                    "Khk_yht_las_index": "Intensity of greenhouse gases, indexed, year 1990 = 100"
+                }
+            }
+        },
+        "Vuosi": {
+            "label": "Vuosi",
+            "category": {
+                "index": {
+                    "2010": 0,
+                    "2011": 1
+                },
+                "label": {
+                    "2010": "2010",
+                    "2011": "2011"
+                }
+            }
+        }
+    },
+    "value": [
+        107.4,
+        96.4,
+        72.43,
+        63.38
+    ],
+    "role": {
+        "time": [
+            "Vuosi"
+        ]
+    },
+    "version": "2.0",
+    "extension": {
+        "px": {
+            "decimals": 0
+        }
+    }
+}
