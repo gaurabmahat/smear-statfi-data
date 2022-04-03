@@ -15,7 +15,7 @@
 *       &tablevariable=KUM_EDDY.av_c_ep&tablevariable=HYY_META.CO2icos168&tablevariable=VAR_EDDY.av_c
 * */
 
-package fi.tuni.csgr.SMEAR;
+package fi.tuni.csgr.SMEAR.fetchSeriesDataFromSmear;
 
 import fi.tuni.csgr.stationNames.stationNameMapping;
 
@@ -46,10 +46,10 @@ public class getTableVariable {
 
     //To test the class
     public static void main(String[] args){
-        List<String> a = Arrays.asList(new String[]{"CO2", "SO2"});
+        /*List<String> a = Arrays.asList(new String[]{"CO2", "SO2"});
         List<String> b = Arrays.asList(new String[]{"Kumpula"});
 
-        System.out.println(new getTableVariable(a,b).getStationsCode());
+        System.out.println(new getTableVariable(a,b).getStationsCode());*/
     }
 
 }
