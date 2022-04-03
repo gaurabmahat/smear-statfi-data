@@ -7,6 +7,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
@@ -16,7 +18,7 @@ import java.util.*;
  */
 public class smearTimeAndVariableData {
 
-    private final Map<String, Map<String, Map<String, List<Instant>>>> mapOfStationNameGasesAndTimeStamp;
+    private final Map<String, Map<String, Map<String, List<LocalDate>>>> mapOfStationNameGasesAndTimeStamp;
 
     /**
      * Initializes the map
@@ -31,7 +33,7 @@ public class smearTimeAndVariableData {
      * @return map that contains name of the station, name of the gases, variable name of the gases and the gases
      * periodStart and periodEnd values.
      */
-    public Map<String, Map<String, Map<String, List<Instant>>>> getSmearTimeData() {
+    public Map<String, Map<String, Map<String, List<LocalDate>>>> getSmearTimeData() {
         getMapOfStationNameAndId();
         return mapOfStationNameGasesAndTimeStamp;
     }
@@ -99,7 +101,6 @@ public class smearTimeAndVariableData {
                     tableIdList.add(urlObject.get("id").getAsInt());
                 }
             }
-
             mapOfStationNameGasesAndTimeStamp.put(nameOfTheStation, getMapOfTimeStamp(url.toString(), tableIdList));
         }
     }
@@ -114,13 +115,13 @@ public class smearTimeAndVariableData {
      * @param tableIdList a list that contains the table ids of variable tables of a station.
      * @return map with gas name, gas variable name and periodStart, periodEnd as list.
      */
-    private Map<String, Map<String, List<Instant>>> getMapOfTimeStamp(String url_, List<Integer> tableIdList) {
+    private Map<String, Map<String, List<LocalDate>>> getMapOfTimeStamp(String url_, List<Integer> tableIdList) {
         //Map to store the name of the gas, its variable name and periodStart, periodEnd values
-        Map<String, Map<String, List<Instant>>> variableNameAndTimeStamp = new HashMap<>();
-        //Map to store the gas variable name and periodStart, periodEnd values, with key as Date Instant of the periodEnd
-        TreeMap<Instant, Map<String, List<Instant>>> co2TimeStamp = new TreeMap<>();
-        TreeMap<Instant, Map<String, List<Instant>>> so2TimeStamp = new TreeMap<>();
-        TreeMap<Instant, Map<String, List<Instant>>> noTimeStamp = new TreeMap<>();
+        Map<String, Map<String, List<LocalDate>>> variableNameAndTimeStamp = new HashMap<>();
+        //Map to store the gas variable name and periodStart, periodEnd values, with key as LocalDate of the periodEnd
+        TreeMap<LocalDate, Map<String, List<LocalDate>>> co2TimeStamp = new TreeMap<>();
+        TreeMap<LocalDate, Map<String, List<LocalDate>>> so2TimeStamp = new TreeMap<>();
+        TreeMap<LocalDate, Map<String, List<LocalDate>>> noTimeStamp = new TreeMap<>();
 
         for (int tableId = 0; tableId < tableIdList.size(); tableId++) {
             //data from SMEAR
@@ -157,11 +158,11 @@ public class smearTimeAndVariableData {
      *
      * @param jArray      JsonArray fetched from the SMEAR API
      * @param givenTitle_ string to match in the title field of the variable data
-     * @return map with Date Instant of the periodEnd value, gas variable name and periodStart, periodEnd values
+     * @return map with Date LocalDate of the periodEnd value, gas variable name and periodStart, periodEnd values
      */
-    private TreeMap<Instant, Map<String, List<Instant>>> gasVariableNameAndTime(JsonArray jArray, String givenTitle_) {
-        //TreeMap to store Date Instant of periodEnd, gas table variable name and periodStart, periodEnd values
-        TreeMap<Instant, Map<String, List<Instant>>> gasVariable = new TreeMap<>();
+    private TreeMap<LocalDate, Map<String, List<LocalDate>>> gasVariableNameAndTime(JsonArray jArray, String givenTitle_) {
+        //TreeMap to store Date LocalDate of periodEnd, gas table variable name and periodStart, periodEnd values
+        TreeMap<LocalDate, Map<String, List<LocalDate>>> gasVariable = new TreeMap<>();
 
         for (int i = 0; i < jArray.size(); i++) {
             JsonObject jObject = jArray.get(i).getAsJsonObject();
@@ -176,16 +177,26 @@ public class smearTimeAndVariableData {
                             .append(".").append(jObject.get("name").getAsString());
 
                     if (jObject.get("periodEnd").isJsonNull()) {
-                        List<Instant> lst = Arrays.asList(Instant.parse(jObject.get("periodStart").getAsString() + "Z"),
-                                Instant.now());
-                        Map<String, List<Instant>> gas = Map.of(variableName.toString(), lst);
-                        gasVariable.put(Instant.now(), gas);
+                        List<LocalDate> lst = Arrays.asList(
+                                Instant.parse(jObject.get("periodStart").getAsString() + "Z")
+                                        .atZone(ZoneId.systemDefault()).toLocalDate(),
+                                LocalDate.now()
+                        );
+                        Map<String, List<LocalDate>> gas = Map.of(variableName.toString(), lst);
+                        gasVariable.put(LocalDate.now(), gas);
 
                     } else {
-                        List<Instant> lst = Arrays.asList(Instant.parse(jObject.get("periodStart").getAsString() + "Z"),
-                                Instant.parse(jObject.get("periodEnd").getAsString() + "Z"));
-                        Map<String, List<Instant>> gas = Map.of(variableName.toString(), lst);
-                        gasVariable.put(Instant.parse(jObject.get("periodEnd").getAsString() + "Z"), gas);
+                        List<LocalDate> lst = Arrays.asList(
+                                Instant.parse(jObject.get("periodStart").getAsString() + "Z")
+                                        .atZone(ZoneId.systemDefault()).toLocalDate(),
+                                Instant.parse(jObject.get("periodEnd").getAsString() + "Z")
+                                        .atZone(ZoneId.systemDefault()).toLocalDate()
+                        );
+                        Map<String, List<LocalDate>> gas = Map.of(variableName.toString(), lst);
+                        gasVariable.put(Instant.parse(jObject.get("periodEnd").getAsString() + "Z")
+                                .atZone(ZoneId.systemDefault()).toLocalDate(),
+                                gas
+                        );
                     }
                 } catch (DateTimeParseException e) {
                 }
@@ -218,7 +229,7 @@ public class smearTimeAndVariableData {
     }
 
     public static void main(String[] args) {
-        //System.out.println(new smearTimeAndVariableData().getSmearTimeData().toString());
+        System.out.println(new smearTimeAndVariableData().getSmearTimeData().toString());
     }
 
 }
