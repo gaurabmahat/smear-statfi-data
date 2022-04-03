@@ -1,9 +1,12 @@
-package fi.tuni.csgr.SMEAR.fetchSeriesDataFromSmear;
+package fi.tuni.csgr.smearAndStatfi.SMEAR.fetchSeriesDataFromSmear;
+
+import fi.tuni.csgr.smearAndStatfi.IGetData;
 
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Arrays;
 import java.util.List;
 
 public class dataFromSmear implements IGetData {
@@ -47,6 +50,7 @@ public class dataFromSmear implements IGetData {
         List<String> gases = Arrays.asList(new String[]{"CO2", "NO", "SO2"});
         List<String> stations = Arrays.asList(new String[]{"Kumpula", "Hyytiälä", "Värriö"});
 
-        System.out.println(new dataFromSmear(startTime, endTime, value, gases, stations).getDataInStringJson());*/
+        System.out.println(new dataFromSmear(startTime, endTime, value, gases, stations).getDataInStringJson());
+        */
     }
 }

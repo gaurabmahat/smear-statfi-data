@@ -1,4 +1,6 @@
-package fi.tuni.csgr.STATFI;
+package fi.tuni.csgr.smearAndStatfi.STATFI;
+
+import fi.tuni.csgr.smearAndStatfi.IGetData;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -11,7 +13,7 @@ import java.util.List;
 /**
  * Retrieve data from STATFI
  */
-public class dataFromStatfi {
+public class dataFromStatfi implements IGetData {
     private List<String> tiedot;
     private List<String> vuosi;
 
@@ -32,12 +34,13 @@ public class dataFromStatfi {
     }
 
     /**
-     * This method converts the lists of Tiedot values and Vuosi values into a string and passes it to an inner method
-     * responseFromStatfi. It returns the response retrieved from responseFromStatfi.
+     * This method returns the response retrieved from responseFromStatfi. It also converts the lists of Tiedot
+     * values and Vuosi values into a string and passes it to an inner method responseFromStatfi.
      * @return returns json data from STATFI as a string
      * @throws URISyntaxException checks if the uri string cannot be parsed as URI reference
      */
-    public String getStatfiData() throws URISyntaxException {
+    @Override
+    public String getDataInStringJson() throws URISyntaxException {
         //Convert List to string
         String tiedotValues = "";
         String vuosiValues = "";
@@ -97,11 +100,11 @@ public class dataFromStatfi {
         return response;
     }
 
-    /*public static void main(String[] args) throws URISyntaxException {
-        List<String> ls = Arrays.asList("Khk_yht_index", "Khk_yht_las_index");
+    public static void main(String[] args) throws URISyntaxException {
+        /*List<String> ls = Arrays.asList("Khk_yht_index", "Khk_yht_las_index");
         List<String> date = Arrays.asList("2010", "2011");
 
-        String data = new dataFromStatfi(ls, date).getStatfiData();
-        System.out.println(data);
-    }*/
+        String data = new dataFromStatfi(ls, date).getDataInStringJson();
+        System.out.println(data);*/
+    }
 }

@@ -15,7 +15,7 @@
 *       &tablevariable=KUM_EDDY.av_c_ep&tablevariable=HYY_META.CO2icos168&tablevariable=VAR_EDDY.av_c
 * */
 
-package fi.tuni.csgr.SMEAR.fetchSeriesDataFromSmear;
+package fi.tuni.csgr.smearAndStatfi.SMEAR.fetchSeriesDataFromSmear;
 
 import fi.tuni.csgr.stationNames.stationNameMapping;
 
