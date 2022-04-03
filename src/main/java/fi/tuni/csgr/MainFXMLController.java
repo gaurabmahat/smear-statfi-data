@@ -19,7 +19,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.chart.*;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
@@ -119,7 +118,7 @@ public class MainFXMLController implements Initializable {
     }
 
     /**
-     * Adds listeners to graphDataManager
+     * Adds listeners to graphDataManager, which will add or remove charts when gases are added or removed from the query.
      *
      * @param graphDataManager
      */
@@ -133,27 +132,8 @@ public class MainFXMLController implements Initializable {
                     charts.remove(name);
                 }
                 if(change.wasAdded()) {
-                    charts.put(name, new ChartView(name));
+                    charts.put(name, new ChartView(name, (ObservableList<Series<Long, Double>>) change.getValueAdded()));
                     t1_graphBox.getChildren().add(charts.get(name).getChartBox());
-                    MapChangeListener gasListener = new MapChangeListener() {
-                        private String gas;
-                        @Override
-                        public void onChanged(Change change) {
-                            if (change.wasRemoved()) {
-                                charts.get(gas).removeSeries(change.getKey().toString());
-                            }
-                            if(change.wasAdded()) {
-                                Series data = new Series(change.getKey().toString(), (ObservableList<XYChart.Data>) change.getValueAdded());
-                                charts.get(gas).addSeries(data);
-                            }
-                        }
-
-                        private MapChangeListener init(String gas) {
-                            this.gas = gas;
-                            return this;
-                        }
-                    }.init(change.getKey().toString());
-                    graphDataManager.addGasListener(change.getKey().toString(), gasListener);
                 }
             }
         };

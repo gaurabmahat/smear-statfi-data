@@ -1,5 +1,6 @@
 package fi.tuni.csgr.components;
 
+import javafx.collections.ObservableList;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -10,7 +11,6 @@ import javafx.util.StringConverter;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -26,14 +26,12 @@ public class ChartView {
     private Map<String, XYChart.Series<Number, Number>> seriesMap;
     private String title;
 
-    public ChartView(String title) {
+    public ChartView(String title, ObservableList<XYChart.Series<Long, Double>> seriesList) {
         chartBox = new VBox();
         chartBox.getStyleClass().add("chart-box");
         chartBox.setFillWidth(true);
 
         this.title = title;
-
-        seriesMap = new HashMap<>();
 
         Text titleText = new Text(title);
         titleText.getStyleClass().add("graph-title");
@@ -63,30 +61,10 @@ public class ChartView {
             }
         });
 
-        chart = new LineChart<>(xAxis, yAxis);
+        chart = new LineChart(xAxis, yAxis, seriesList);
         chart.setAnimated(false);
         chart.setCreateSymbols(false);
         chartBox.getChildren().add(chart);
-    }
-
-    /**
-     * Adds a series to the graph.
-     *
-     * @param series
-     */
-    public void addSeries(XYChart.Series<Number, Number> series) {
-        chart.getData().add(series);
-        seriesMap.put(series.getName(), series);
-    }
-
-    /**
-     * Removes a series from the graph.
-     *
-     * @param name Name of series to remove.
-     */
-    public void removeSeries(String name) {
-        chart.getData().remove(seriesMap.get(name));
-        seriesMap.remove(name);
     }
 
     public VBox getChartBox() {
