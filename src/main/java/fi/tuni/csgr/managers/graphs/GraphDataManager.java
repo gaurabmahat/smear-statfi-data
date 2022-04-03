@@ -14,7 +14,7 @@ import java.util.*;
 
 public class GraphDataManager {
 
-    ObservableMap<String, ObservableMap<String, ObservableList<XYChart.Data<Long, Double>>>> gases;
+    ObservableMap<String, ObservableList<XYChart.Series<Long, Double>>> gases;
 
     public GraphDataManager(){
         this.gases = FXCollections.observableMap(new HashMap<>());
@@ -32,23 +32,15 @@ public class GraphDataManager {
         removeOldGases(gasDiff.getToRemove());
         addNewGases(gasDiff.getToAdd());
 
-        for(Map.Entry<String, ObservableMap<String, ObservableList<XYChart.Data<Long, Double>>>> gasEntry:
-                gases.entrySet()){
-            String gas = gasEntry.getKey();
-            Map<String, ObservableList<XYChart.Data<Long, Double>>> currentStationsForGasMap =
-                    gasEntry.getValue();
-
+        for (String gas : gases.keySet()){
+            List<String> currentStationsForGas = getStoredStationNamesForGas(gas);
             List<String> resultsStationsForGas = results.getStationsForGas(gas);
-            List<String> currentStationsForGas = currentStationsForGasMap.keySet().stream().toList();
 
-            DiffResult stationsDiff = getDiff(
-                    currentStationsForGas,
-                    resultsStationsForGas);
+            DiffResult stationsDiff = getDiff(currentStationsForGas, resultsStationsForGas);
             removeOldStationsForGas(gas, stationsDiff.getToRemove());
             addNewStationsForGas(gas, stationsDiff.getToAdd());
-        }
-        for (String gas: gases.keySet()){
-            for (String station: gases.get(gas).keySet()){
+
+            for (String station: getStoredStationNamesForGas(gas)){
                 updateGasStationResults(results, station, gas);
             }
         }
@@ -67,28 +59,32 @@ public class GraphDataManager {
      * @param gas
      * @param listener
      */
-    public void addGasListener(String gas, MapChangeListener listener){
+    public void addGasListener(String gas, ListChangeListener listener){
         gases.get(gas).addListener(listener);
     }
 
-    /**
-     * adds listener to the list storing results for the specified gas and station
-     * @param gas
-     * @param station
-     * @param listener
-     */
-    public void addGasStationListener(String gas, String station, ListChangeListener listener){
-        gases.get(gas).get(station).addListener(listener);
+    private List<String> getStoredStationNamesForGas(String gas){
+        List<XYChart.Series<Long, Double>> stationSeries = gases.get(gas);
+        return stationSeries.stream().map(s -> s.getName()).toList();
+    }
+
+    private XYChart.Series<Long, Double> getGasStationSeries(String gas, String station){
+        List<XYChart.Series<Long, Double>> allGasSeries = gases.get(gas);
+        int i = 0;
+        while (! allGasSeries.get(i).getName().equals(station)){
+            i++;
+        }
+        return allGasSeries.get(i);
     }
 
     private void updateGasStationResults(ResultList resultList, String station, String gas){
         ArrayList<XYChart.Data<Long, Double>> data = getXYChartDataList(
                 resultList.getSGResult(station, gas).getData()
         );
-
-        ObservableList<XYChart.Data<Long, Double>> gasStationResultList = gases.get(gas).get(station);
-        gasStationResultList.clear();
-        gasStationResultList.addAll(data);
+        XYChart.Series<Long, Double> stationSeries = getGasStationSeries(gas, station);
+        ObservableList<XYChart.Data<Long, Double>> seriesData = stationSeries.getData();
+        seriesData.clear();
+        seriesData.addAll(data);
     }
 
     private void removeOldGases(List<String> gasesToRemove){
@@ -99,21 +95,27 @@ public class GraphDataManager {
 
     private void addNewGases(List<String> gasesToAdd){
         for(String gas: gasesToAdd){
-            gases.put(gas, FXCollections.observableMap(new HashMap<>()));
+            gases.put(gas, FXCollections.observableArrayList(new ArrayList<>()));
         }
     }
 
     private void addNewStationsForGas(String gas, List<String> stations){
-        Map<String, ObservableList<XYChart.Data<Long, Double>>> gasStations = gases.get(gas);
-        for(String station: stations){
-            gasStations.put(station, FXCollections.observableArrayList(new ArrayList<>()));
+        List<XYChart.Series<Long, Double>> gasStations = gases.get(gas);
+        for (String station: stations){
+
+            XYChart.Series<Long, Double> stationSeries = new XYChart.Series<>(
+                    station,
+                    FXCollections.observableArrayList(new ArrayList<>())
+            );
+            gasStations.add(stationSeries);
         }
+
     }
 
     private void removeOldStationsForGas(String gas, List<String> stations){
-        Map<String, ObservableList<XYChart.Data<Long, Double>>> gasStations = gases.get(gas);
+        List<XYChart.Series<Long, Double>> gasStations = gases.get(gas);
         for(String station: stations){
-            gasStations.remove(station);
+            gasStations.removeIf(series -> series.getName().equals(station));
         }
     }
 
