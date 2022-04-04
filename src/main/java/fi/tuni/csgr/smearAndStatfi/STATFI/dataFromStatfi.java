@@ -14,8 +14,8 @@ import java.util.List;
  * Retrieve data from STATFI
  */
 public class dataFromStatfi implements IGetData {
-    private List<String> tiedot;
-    private List<String> vuosi;
+    private final List<String> tiedot;
+    private final List<String> vuosi;
 
     /**
      * Takes a list of Tiedot and a list of Vuosi values to retrieve data from STATFI
@@ -105,6 +105,7 @@ public class dataFromStatfi implements IGetData {
         List<String> date = Arrays.asList("2010", "2011");
 
         String data = new dataFromStatfi(ls, date).getDataInStringJson();
-        System.out.println(data);*/
+        System.out.println(data);
+        */
     }
 }
