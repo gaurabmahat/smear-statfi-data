@@ -1,6 +1,6 @@
 package fi.tuni.csgr.network;
 
-import fi.tuni.csgr.SMEAR.fetchSeriesDataFromSmear.dataFromSmear;
+import fi.tuni.csgr.smearAndStatfi.SMEAR.fetchSeriesDataFromSmear.dataFromSmear;
 import fi.tuni.csgr.converters.json.JsonToResultConverter;
 import fi.tuni.csgr.converters.json.ResultList;
 import fi.tuni.csgr.converters.json.SmearJsonToResultConverter;
