@@ -12,6 +12,7 @@ import fi.tuni.csgr.network.Network;
 import fi.tuni.csgr.network.SmearNetwork;
 import fi.tuni.csgr.utils.DatePickerUtils;
 import fi.tuni.csgr.utils.MenuUtils;
+import fi.tuni.csgr.components.YearPicker;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
@@ -67,6 +68,12 @@ public class MainFXMLController implements Initializable {
     @FXML
     private VBox t1_graphBox;
     @FXML
+    private MenuButton t2_year_picker;
+    @FXML
+    private Text t2_year_from_text;
+    @FXML
+    private Text t2_year_to_text;
+    @FXML
     private Tab tab2;
     @FXML
     private Tab tab3;
@@ -115,6 +122,16 @@ public class MainFXMLController implements Initializable {
         // Not yet implemented
         ObservableList<String> displayList = FXCollections.observableArrayList("selection", "selection", "selection", "selection");
         t1_cb_display.setItems(displayList);
+
+        initializeYearPicker();
+    }
+
+    private void initializeYearPicker() {
+        YearPicker yearPicker = new YearPicker(1975, 2017);
+        CustomMenuItem menuItem = new CustomMenuItem(yearPicker.getYearGrid());
+        menuItem.setHideOnClick(false);
+        menuItem.getStyleClass().add("year-picker-menu-item");
+        t2_year_picker.getItems().add(menuItem);
     }
 
     /**
