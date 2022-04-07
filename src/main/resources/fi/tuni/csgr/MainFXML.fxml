@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -51,7 +52,15 @@
         </Tab>
         <Tab fx:id="tab2" styleClass="tab_pane" text="Historical Statistics">
             <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <MenuButton fx:id="t2_year_picker" layoutX="441.0" layoutY="41.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="114.0" styleClass="year-picker" text="Select range">
+                    <items>
+                    </items>
+                  </MenuButton>
+                  <Text fx:id="t2_year_from_text" layoutX="661.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                  <Text fx:id="t2_year_to_text" layoutX="661.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+               </children></AnchorPane>
             </content>
         </Tab>
         <Tab fx:id="tab3" styleClass="tab_pane" text="Compare CO2">

@@ -32,3 +32,23 @@
 .chart-box {
     -fx-padding: 10;
 }
+
+.year-picker-menu-item:focused {
+    -fx-background-color: none;
+}
+
+.year-picker-cell {
+    -fx-padding: 2px 5px 2px 5px;
+}
+
+.year-picker-cell:hover {
+    -fx-background-color: #e5e5e5;
+}
+
+.year-picker-selected-cell {
+    -fx-background-color: #69c3db77;
+}
+
+.year-picker-selected-cell:hover {
+    -fx-background-color: #69c3db;
+}
