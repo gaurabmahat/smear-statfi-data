@@ -13,4 +13,6 @@ module fi.tuni.csgr {
     exports fi.tuni.csgr;
     exports fi.tuni.csgr.managers.graphs;
     opens fi.tuni.csgr.managers.graphs to javafx.fxml;
+    opens fi.tuni.csgr.utils to com.google.gson;
+    opens fi.tuni.csgr.managers.userdata to com.google.gson;
 }

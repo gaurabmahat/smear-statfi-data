@@ -1,5 +1,6 @@
 package fi.tuni.csgr;
 
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -8,11 +9,14 @@ import java.util.*;
 
 import fi.tuni.csgr.components.ChartView;
 import fi.tuni.csgr.managers.graphs.GraphDataManager;
+import fi.tuni.csgr.managers.userdata.ErrorReadingUserDataException;
+import fi.tuni.csgr.managers.userdata.ErrorWritingUserDataException;
 import fi.tuni.csgr.network.Network;
 import fi.tuni.csgr.network.SmearNetwork;
 import fi.tuni.csgr.utils.DatePickerUtils;
 import fi.tuni.csgr.utils.MenuUtils;
 import fi.tuni.csgr.components.YearPicker;
+import fi.tuni.csgr.managers.userdata.UserDataManager;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
@@ -20,6 +24,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
+import javafx.scene.Scene;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
@@ -88,6 +94,7 @@ public class MainFXMLController implements Initializable {
 
     private GraphDataManager graphDataManager;
     private Network smearNetwork;
+    private UserDataManager userDataManager;
 
     /**
      * Initializes the controller class.
@@ -102,6 +109,8 @@ public class MainFXMLController implements Initializable {
         graphDataManager = new GraphDataManager();
         smearNetwork = new SmearNetwork(graphDataManager);
         addGraphListeners(graphDataManager);
+
+        userDataManager = new UserDataManager(System.getProperty("user.dir"));
 
         fromDate = LocalDate.now().minusDays(2);
         t1_datePicker_from.setValue(LocalDate.now().minusDays(2));
@@ -177,12 +186,33 @@ public class MainFXMLController implements Initializable {
     }
 
     @FXML
-    private void handleSaveBtn(ActionEvent event) {
-        t1_txt_select.setVisible(true);
+    private void handleSaveBtn() {
+        if (selectedGases.isEmpty() | selectedStations.isEmpty()) {
+            showAlert("Please select a gas and a station to save selection.");
+        }
+        else {
+            try {
+                userDataManager.saveSelection(fromDate, toDate, selectedGases, selectedStations);
+                showAlert("Selection saved!");
+            } catch (ErrorWritingUserDataException e) {
+                showAlert("Error while saving selection.");
+            }
+
+        }
     }
 
     @FXML
-    private void handleLoadBtn(ActionEvent event) {
+    private void handleLoadBtn() {
+        try {
+            UserDataManager.Selection savedSelection = userDataManager.readSelection();
+            t1_datePicker_from.setValue(savedSelection.getFromDate());
+            t1_datePicker_to.setValue(savedSelection.getToDate());
+        } catch (ErrorReadingUserDataException e) {
+            showAlert("Error while reading the saved selection");
+        } catch (FileNotFoundException e) {
+            showAlert("No saved selection found");
+        }
+
     }
 
     @FXML
@@ -196,6 +226,16 @@ public class MainFXMLController implements Initializable {
             smearNetwork.getData(from, to, "MAX", selectedGases, selectedStations);
             t1_txt_select.setVisible(false);
         }
+    }
+
+    @FXML
+    private void changeCursorToHand() {
+        tabPane.setCursor(Cursor.HAND);
+    }
+
+    @FXML
+    private void changeCursorToArrow() {
+        tabPane.setCursor(Cursor.DEFAULT);
     }
 
     public void showAlert(String msg) {
