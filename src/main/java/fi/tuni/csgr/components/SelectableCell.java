@@ -3,19 +3,13 @@ package fi.tuni.csgr.components;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 
-public class SelectableCell {
-    private StackPane cellPane;
+public class SelectableCell extends StackPane{
     private int value;
 
     public SelectableCell(int val) {
-        cellPane = new StackPane();
         this.value = val;
-        cellPane.getStyleClass().add("year-picker-cell");
-        cellPane.getChildren().add(new Text(Integer.toString(val)));
-    }
-
-    public StackPane getCellPane() {
-        return cellPane;
+        this.getStyleClass().add("year-picker-cell");
+        this.getChildren().add(new Text(Integer.toString(val)));
     }
 
     public int getValue() {
@@ -23,12 +17,12 @@ public class SelectableCell {
     }
 
     public void selectCell() {
-        if (!cellPane.getStyleClass().contains("year-picker-selected-cell")) {
-            cellPane.getStyleClass().add("year-picker-selected-cell");
+        if (!this.getStyleClass().contains("year-picker-selected-cell")) {
+            this.getStyleClass().add("year-picker-selected-cell");
         }
     }
 
     public void deselectCell() {
-        cellPane.getStyleClass().remove("year-picker-selected-cell");
+        this.getStyleClass().remove("year-picker-selected-cell");
     }
 }

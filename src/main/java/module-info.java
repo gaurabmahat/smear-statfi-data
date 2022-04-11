@@ -15,4 +15,5 @@ module fi.tuni.csgr {
     opens fi.tuni.csgr.managers.graphs to javafx.fxml;
     opens fi.tuni.csgr.utils to com.google.gson;
     opens fi.tuni.csgr.managers.userdata to com.google.gson;
+    opens fi.tuni.csgr.components to com.google.gson;
 }

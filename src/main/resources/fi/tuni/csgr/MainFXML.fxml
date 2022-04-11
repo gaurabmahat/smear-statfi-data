@@ -5,11 +5,11 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.MenuButton?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -32,7 +32,7 @@
                                 </children>
                             </VBox>
                         </ScrollPane>
-                        <Button fx:id="btn_show" layoutX="656.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleShowBtn" onMouseEntered="#changeCursorToHand" onMouseExited="#changeCursorToArrow"  prefHeight="32.0" prefWidth="110.0" styleClass="btn-main" text="SHOW" />
+                        <Button fx:id="btn_show" layoutX="656.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleShowBtn" onMouseEntered="#changeCursorToHand" onMouseExited="#changeCursorToArrow" prefHeight="32.0" prefWidth="110.0" styleClass="btn-main" text="SHOW" />
                         <StackPane fx:id="t1_txt_pane" layoutY="286.0" prefHeight="0.0" prefWidth="1024.0">
                             <children>
                                 <Text fx:id="t1_txt_select" fill="#686868" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="please-select-text" text="Select criteria and press show to draw graphs" textAlignment="CENTER" wrappingWidth="519.6044921875">
@@ -45,8 +45,8 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                         </StackPane>
-                        <MenuButton fx:id="t1_mb_gas" layoutX="26.0" layoutY="14.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="95.0" text="Gas" />
-                        <MenuButton fx:id="t1_mb_stations" layoutX="419.0" layoutY="14.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="107.0" text="Stations" />
+                  <HBox fx:id="t1_gas_dropdown" layoutX="26.0" layoutY="14.0" prefHeight="25.0" prefWidth="100.0" />
+                  <HBox fx:id="t1_station_dropdown" layoutX="419.0" layoutY="14.0" prefHeight="25.0" prefWidth="107.0" />
                     </children></AnchorPane>
             </content>
         </Tab>
