@@ -4,6 +4,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.StringConverter;
@@ -30,6 +31,8 @@ public class ChartView {
         chartBox = new VBox();
         chartBox.getStyleClass().add("chart-box");
         chartBox.setFillWidth(true);
+
+        StackPane stackPane = new StackPane();
 
         this.title = title;
 
@@ -64,7 +67,9 @@ public class ChartView {
         chart = new LineChart(xAxis, yAxis, seriesList);
         chart.setAnimated(false);
         chart.setCreateSymbols(false);
-        chartBox.getChildren().add(chart);
+        stackPane.getChildren().add(chart);
+
+        chartBox.getChildren().add(stackPane);
     }
 
     public VBox getChartBox() {

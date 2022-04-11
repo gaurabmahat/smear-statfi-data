@@ -4,8 +4,18 @@
 */
 
 .btn-main {
-    -fx-background-color: blue;
+    -fx-background-color: #1D2F6F;
     -fx-text-fill: white;
+}
+
+.btn-main:hover {
+    -fx-background-color: green;
+    -fx-text-fill: white;
+}
+
+.btn-clicked {
+    -fx-background-color: white;
+    -fx-text-fill: green;
 }
 
 .please-select-text {

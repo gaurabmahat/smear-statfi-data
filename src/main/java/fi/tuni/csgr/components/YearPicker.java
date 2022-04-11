@@ -1,5 +1,6 @@
 package fi.tuni.csgr.components;
 
+import javafx.scene.control.CustomMenuItem;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -7,7 +8,7 @@ import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 
-public class YearPicker {
+public class YearPicker extends CustomMenuItem {
     private VBox yearGrid;
     private static final int COLUMNS = 4;
     private int selectionStart;
@@ -30,7 +31,7 @@ public class YearPicker {
         for (int i = from ; i <= to ; i++) {
             SelectableCell newCell = new SelectableCell(i);
             cells.add(newCell);
-            row.getChildren().add(newCell.getCellPane());
+            row.getChildren().add(newCell);
             colIterator++;
             if (colIterator >= COLUMNS) {
                 yearGrid.getChildren().add(row);
@@ -41,7 +42,7 @@ public class YearPicker {
         if (colIterator > 0) {
             yearGrid.getChildren().add(row);
         }
-
+        this.setContent(yearGrid);
         addMouseListeners();
     }
 
@@ -57,14 +58,13 @@ public class YearPicker {
         });
 
         cells.forEach((cell) -> {
-            cell.getCellPane().setOnMousePressed((MouseEvent me) -> {
+            cell.setOnMousePressed((MouseEvent me) -> {
                 selectionStart = cell.getValue();
                 selectionEnd = cell.getValue();
                 updateCells();
-                me.setDragDetect(true);
             });
 
-            cell.getCellPane().setOnMouseDragEntered((MouseEvent me) -> {
+            cell.setOnMouseDragEntered((MouseEvent me) -> {
                 selectionEnd = cell.getValue();
                 updateCells();
             });
@@ -85,12 +85,5 @@ public class YearPicker {
             else
                 cell.deselectCell();
         });
-    }
-
-    /**
-     * @return VBox containing grid
-     */
-    public VBox getYearGrid() {
-        return yearGrid;
     }
 }
