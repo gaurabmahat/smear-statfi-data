@@ -12,7 +12,7 @@ import java.util.List;
 public class dataFromSmear implements IGetData {
     private String startTime;   //Date
     private String endTime;     //Date
-    private String value;       //MIN, MAX, ARITHMETIC
+    private String value;       //NONE, MIN, MAX, ARITHMETIC
     private List<String> gases; //Name of the Gases
     private List<String> stations; //Name of the Stations
 
@@ -44,13 +44,13 @@ public class dataFromSmear implements IGetData {
     public static void main(String[] args){
         /*String startTime = "2022-01-20T01:00:00.000";
         String endTime = "2022-01-20T02:00:00.000";
-        String value = "MAX";
+        String value = "NONE";
 
         //List of gases and stations
         List<String> gases = Arrays.asList(new String[]{"CO2", "NO", "SO2"});
         List<String> stations = Arrays.asList(new String[]{"Kumpula", "Hyytiälä", "Värriö"});
 
-        System.out.println(new dataFromSmear(startTime, endTime, value, gases, stations).getDataInStringJson());
+        System.out.println(new dataFromSmear(startTime, endTime, gases, stations).getDataInStringJson());
         */
     }
 }

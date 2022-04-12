@@ -230,7 +230,7 @@ public class smearTimeAndVariableData {
         return urlArray;
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         var sinfo =  new smearTimeAndVariableData().getSmearTimeData();
         for(var i : sinfo.keySet()){
             System.out.println(i);
@@ -242,6 +242,6 @@ public class smearTimeAndVariableData {
             }
         }
 
-    }
+    }*/
 
 }

@@ -15,14 +15,14 @@ import java.util.List;
  */
 public class dataFromStatfi implements IGetData {
     private final List<String> tiedot;
-    private final List<String> vuosi;
+    private final List<Integer> vuosi;
 
     /**
      * Takes a list of Tiedot and a list of Vuosi values to retrieve data from STATFI
      * @param tiedot_ list of Tiedot values
      * @param vuosi_ list of Vuosi values
      */
-    public dataFromStatfi(List<String> tiedot_, List<String> vuosi_){
+    public dataFromStatfi(List<String> tiedot_, List<Integer> vuosi_){
         if(tiedot_.isEmpty()){
             throw new IllegalArgumentException("Tiedot list cannot be empty.");
         }
@@ -102,10 +102,9 @@ public class dataFromStatfi implements IGetData {
 
     public static void main(String[] args) throws URISyntaxException {
         /*List<String> ls = Arrays.asList("Khk_yht_index", "Khk_yht_las_index");
-        List<String> date = Arrays.asList("2010", "2011");
+        List<Integer> date = Arrays.asList(2010, 2011);
 
         String data = new dataFromStatfi(ls, date).getDataInStringJson();
-        System.out.println(data);
-        */
+        System.out.println(data);*/
     }
 }

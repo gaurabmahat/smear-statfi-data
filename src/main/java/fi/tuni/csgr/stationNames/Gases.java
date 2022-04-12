@@ -1,7 +1,5 @@
 package fi.tuni.csgr.stationNames;
 
-import java.util.Map;
-
 public class Gases {
     private final String name;
     private final Values values;
