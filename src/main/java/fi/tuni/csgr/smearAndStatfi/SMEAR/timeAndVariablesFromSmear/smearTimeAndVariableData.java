@@ -1,6 +1,7 @@
 package fi.tuni.csgr.smearAndStatfi.SMEAR.timeAndVariablesFromSmear;
 
 import com.google.gson.*;
+import fi.tuni.csgr.MainFXMLController;
 import fi.tuni.csgr.stationNames.Gases;
 import fi.tuni.csgr.stationNames.Station;
 import fi.tuni.csgr.stationNames.Values;
@@ -230,7 +231,7 @@ public class smearTimeAndVariableData {
         return urlArray;
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         var sinfo =  new smearTimeAndVariableData().getSmearTimeData();
         for(var i : sinfo.keySet()){
             System.out.println(i);
@@ -242,6 +243,6 @@ public class smearTimeAndVariableData {
             }
         }
 
-    }
+    }*/
 
 }
