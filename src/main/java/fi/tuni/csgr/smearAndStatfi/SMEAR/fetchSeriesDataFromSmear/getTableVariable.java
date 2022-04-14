@@ -17,6 +17,7 @@
 
 package fi.tuni.csgr.smearAndStatfi.SMEAR.fetchSeriesDataFromSmear;
 
+import fi.tuni.csgr.MainFXMLController;
 import fi.tuni.csgr.stationNames.stationNameMapping;
 
 import java.util.Arrays;
@@ -36,8 +37,7 @@ public class getTableVariable {
         StringBuilder tableVariable = new StringBuilder("");
         for (String gas : this.gases) {
             for(String station : this.stations){
-                Map<String, String> getStationName = stationNameMapping.mapStationAndGas.get(station);
-                String stationCode = getStationName.get(gas);
+                String stationCode = MainFXMLController.getInitialDataFromSmear.get(station).getStationMap().get(gas).getVariableName();
                 tableVariable.append("&tablevariable=" + stationCode);
             }
         }
