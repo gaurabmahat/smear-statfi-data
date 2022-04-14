@@ -1,6 +1,7 @@
 package fi.tuni.csgr.smearAndStatfi.SMEAR.fetchSeriesDataFromSmear;
 
 import fi.tuni.csgr.smearAndStatfi.IGetData;
+import fi.tuni.csgr.stationNames.stationNameMapping;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -8,6 +9,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class dataFromSmear implements IGetData {
     private String startTime;   //Date
@@ -27,7 +29,7 @@ public class dataFromSmear implements IGetData {
     @Override
     public String getDataInStringJson() {
         //Get table variables from the class getTableVariable
-        String tableVariables = new getTableVariable(gases, stations).getStationsCode();
+        String tableVariables = getStationsCode();
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://smear-backend.rahtiapp.fi/search/timeseries?aggregation=" + value +
@@ -38,6 +40,18 @@ public class dataFromSmear implements IGetData {
         return client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApply(HttpResponse::body)
                 .join();
+    }
+
+    private String getStationsCode() {
+        StringBuilder tableVariable = new StringBuilder("");
+        for (String gas : this.gases) {
+            for(String station : this.stations){
+                Map<String, String> getStationName = stationNameMapping.mapStationAndGas.get(station);
+                String stationCode = getStationName.get(gas);
+                tableVariable.append("&tablevariable=" + stationCode);
+            }
+        }
+        return tableVariable.toString();
     }
 
     //To test the class

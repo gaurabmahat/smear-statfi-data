@@ -37,7 +37,8 @@ public class getTableVariable {
         StringBuilder tableVariable = new StringBuilder("");
         for (String gas : this.gases) {
             for(String station : this.stations){
-                String stationCode = MainFXMLController.getInitialDataFromSmear.get(station).getStationMap().get(gas).getVariableName();
+                Map<String, String> getStationName = stationNameMapping.mapStationAndGas.get(station);
+                String stationCode = getStationName.get(gas);
                 tableVariable.append("&tablevariable=" + stationCode);
             }
         }
