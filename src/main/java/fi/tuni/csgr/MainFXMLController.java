@@ -10,6 +10,8 @@ import fi.tuni.csgr.components.ChartView;
 import fi.tuni.csgr.managers.graphs.GraphDataManager;
 import fi.tuni.csgr.network.Network;
 import fi.tuni.csgr.network.SmearNetwork;
+import fi.tuni.csgr.smearAndStatfi.SMEAR.timeAndVariablesFromSmear.smearTimeAndVariableData;
+import fi.tuni.csgr.stationNames.Station;
 import fi.tuni.csgr.utils.DatePickerUtils;
 import fi.tuni.csgr.utils.MenuUtils;
 import fi.tuni.csgr.components.YearPicker;
@@ -156,6 +158,11 @@ public class MainFXMLController implements Initializable {
         };
         graphDataManager.addMainListener(mainListener);
     }
+
+    /**
+     * Initial data from SMEAR
+     */
+    public static final Map<String, Station> getInitialDataFromSmear = new smearTimeAndVariableData().getSmearTimeData();
 
     @FXML
     private void handleT1DatePickerFrom(ActionEvent event) {
