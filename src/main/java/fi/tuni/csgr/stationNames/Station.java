@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class Station {
     private final String name;
-    private final Map<String, Values> stationMap;
+    private final Map<String, Gases> stationMap;
 
     public Station(String name_) {
         this.name = name_;
@@ -17,10 +17,10 @@ public class Station {
     }
 
     public void addGasToStationMap(Gases gases_) {
-        stationMap.put(gases_.getGasName(), gases_.getGasValues());
+        stationMap.put(gases_.getGasName(), gases_);
     }
 
-    public Map<String, Values> getStationMap() {
+    public Map<String, Gases> getStationMap() {
         return this.stationMap;
     }
 }
