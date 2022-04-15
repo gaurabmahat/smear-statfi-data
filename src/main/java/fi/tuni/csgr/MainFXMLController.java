@@ -17,6 +17,7 @@ import fi.tuni.csgr.utils.DatePickerUtils;
 import fi.tuni.csgr.components.CheckBoxMenu;
 import fi.tuni.csgr.components.YearPicker;
 import fi.tuni.csgr.managers.userdata.UserDataManager;
+import fi.tuni.csgr.utils.SelectionData;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
@@ -197,32 +198,40 @@ public class MainFXMLController implements Initializable {
             showAlert("Please select a gas and a station to save selection.");
         }
         else {
+            SelectionData selection = new SelectionData(SelectionData.Type.SMEAR, fromDate, toDate, new HashMap<>(){});
+            // TODO: save other fields and their values
             try {
-                userDataManager.saveSelection(fromDate, toDate, selectedGases, selectedStations);
+                userDataManager.saveSelection("SMEAR", selection);
                 showAlert("Selection saved!");
             } catch (ErrorWritingUserDataException e) {
                 showAlert("Error while saving selection.");
             }
-
         }
     }
 
     @FXML
     private void handleLoadBtn() {
         try {
-            UserDataManager.Selection savedSelection = userDataManager.readSelection();
+            SelectionData savedSelection = userDataManager.readSelection("SMEAR");
             t1_datePicker_from.setValue(savedSelection.getFromDate());
             t1_datePicker_to.setValue(savedSelection.getToDate());
-            gasMenu.clearSelections();
-            savedSelection.getGases().forEach(gas -> gasMenu.setSelected(gas));
-            stationMenu.clearSelections();
-            savedSelection.getStations().forEach(station -> stationMenu.setSelected(station));
-
+            for(Map.Entry<String, ArrayList<String>> searchData: savedSelection.getSearchData().entrySet()){
+                String fieldName = searchData.getKey();
+                ArrayList<String> values = searchData.getValue();
+                // TODO: add setting other fields to rertrieved values
+            }
         } catch (ErrorReadingUserDataException e) {
             showAlert("Error while reading the saved selection");
         } catch (FileNotFoundException e) {
             showAlert("No saved selection found");
         }
+    }
+
+    private List<String> getListFromString(String stringList){
+        String[] valuesArr = stringList.split(",");
+        List<String> values =  Arrays.stream(valuesArr).map(s -> s.replaceAll("\\[|\\]|\\s]", "")).toList();
+        System.out.println(values.get(0));
+        return values;
 
     }
 
