@@ -13,6 +13,8 @@ public class YearPicker extends CustomMenuItem {
     private static final int COLUMNS = 4;
     private int selectionStart;
     private int selectionEnd;
+    private int startYear;
+    private int endYear;
     private ArrayList<SelectableCell> cells;
 
     /**
@@ -25,7 +27,13 @@ public class YearPicker extends CustomMenuItem {
     public YearPicker(int from, int to) {
         yearGrid = new VBox();
         cells = new ArrayList<>();
+        setRange(from, to);
+        this.setContent(yearGrid);
+        addGridMouseListeners();
+    }
 
+    public void setRange(int from, int to) {
+        yearGrid.getChildren().clear();
         int colIterator = 0;
         HBox row = new HBox();
         for (int i = from ; i <= to ; i++) {
@@ -38,36 +46,42 @@ public class YearPicker extends CustomMenuItem {
                 row = new HBox();
                 colIterator = 0;
             }
+            addCellMouseListeners(newCell);
         }
         if (colIterator > 0) {
             yearGrid.getChildren().add(row);
         }
-        this.setContent(yearGrid);
-        addMouseListeners();
+        startYear = 0;
+        endYear = 0;
+        updateCells();
     }
 
     /**
-     * Add listeners to select a single cell when clicking a cell and a range of cells when dragging.
+     * Add listeners to cell to select cell on click and handle drag.
+     * @param cell
      */
-    private void addMouseListeners() {
+    private void addCellMouseListeners(SelectableCell cell) {
+        cell.setOnMousePressed((MouseEvent me) -> {
+            selectionStart = cell.getValue();
+            selectionEnd = cell.getValue();
+            updateCells();
+        });
+
+        cell.setOnMouseDragEntered((MouseEvent me) -> {
+            selectionEnd = cell.getValue();
+            updateCells();
+        });
+    }
+
+    /**
+     * Add listener to activate dragging.
+     */
+    private void addGridMouseListeners() {
         yearGrid.setOnDragDetected((MouseEvent e) -> {
             if (e.getButton() == MouseButton.PRIMARY) {
                 e.consume();
                 yearGrid.startFullDrag();
             }
-        });
-
-        cells.forEach((cell) -> {
-            cell.setOnMousePressed((MouseEvent me) -> {
-                selectionStart = cell.getValue();
-                selectionEnd = cell.getValue();
-                updateCells();
-            });
-
-            cell.setOnMouseDragEntered((MouseEvent me) -> {
-                selectionEnd = cell.getValue();
-                updateCells();
-            });
         });
     }
 
@@ -75,15 +89,23 @@ public class YearPicker extends CustomMenuItem {
      * Updates all cells in the grid to reflect current selection.
      */
     private void updateCells() {
-        int start = Math.min(selectionStart, selectionEnd);
-        int end = Math.max(selectionStart, selectionEnd);
+        startYear = Math.min(selectionStart, selectionEnd);
+        endYear = Math.max(selectionStart, selectionEnd);
         cells.forEach((cell) -> {
             int value = cell.getValue();
-            if  (value >= start && value <= end) {
+            if  (value >= startYear && value <= endYear) {
                 cell.selectCell();
             }
             else
                 cell.deselectCell();
         });
+    }
+
+    public int getStartYear() {
+        return startYear;
+    }
+
+    public int getEndYear() {
+        return endYear;
     }
 }

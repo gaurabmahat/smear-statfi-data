@@ -8,11 +8,14 @@ import java.time.Month;
 import java.util.*;
 
 import fi.tuni.csgr.components.ChartView;
+import fi.tuni.csgr.components.ControlContainer;
 import fi.tuni.csgr.managers.graphs.GraphDataManager;
 import fi.tuni.csgr.managers.userdata.ErrorReadingUserDataException;
 import fi.tuni.csgr.managers.userdata.ErrorWritingUserDataException;
 import fi.tuni.csgr.network.Network;
 import fi.tuni.csgr.network.SmearNetwork;
+import fi.tuni.csgr.query.Query;
+import fi.tuni.csgr.query.QuerySingletonFactory;
 import fi.tuni.csgr.smearAndStatfi.SMEAR.timeAndVariablesFromSmear.smearTimeAndVariableData;
 import fi.tuni.csgr.stationNames.Station;
 import fi.tuni.csgr.utils.DatePickerUtils;
@@ -142,6 +145,13 @@ public class MainFXMLController implements Initializable {
         t1_cb_display.setItems(displayList);
 
         initializeYearPicker();
+
+        // TESTING NEW LAYOUT COMPONENTS:
+        VBox testBox = new VBox();
+        tab3.setContent(testBox);
+        QuerySingletonFactory queryFactory = new QuerySingletonFactory();
+        Query smearQuery = queryFactory.getInstance("SMEAR");
+        smearQuery.getControlComponents().forEach(component -> testBox.getChildren().add(new ControlContainer(component)));
     }
 
     private void initializeYearPicker() {

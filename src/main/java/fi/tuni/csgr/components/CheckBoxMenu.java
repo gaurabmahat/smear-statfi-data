@@ -49,7 +49,7 @@ public class CheckBoxMenu extends MenuButton {
                     this.setText(defaultText);
                 }
                 else {
-                    this.setText(String.join(" ", selectedItems));
+                    this.setText(String.join(", ", selectedItems));
                 }
             });
 
