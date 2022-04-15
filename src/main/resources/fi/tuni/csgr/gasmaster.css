@@ -18,6 +18,14 @@
     -fx-text-fill: green;
 }
 
+.chart-pane {
+    -fx-background: white;
+}
+
+.control-component {
+    -fx-padding: 0px 3px 10px 20px;
+}
+
 .please-select-text {
     -fx-text-fill: #686868;
 }
