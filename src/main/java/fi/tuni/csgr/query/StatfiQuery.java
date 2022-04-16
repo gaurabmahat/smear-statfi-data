@@ -52,7 +52,7 @@ public class StatfiQuery implements  Query {
         ObservableList<String> gasList = FXCollections.observableArrayList("CO2 tonnes", "CO2 intensity", "CO2 indexed", "CO2 indexed intensity");
 
         // Create UI components and add to list of components
-        years = new YearSelector(1975, 2017, "Years", true);
+        years = new YearSelector(1990, 2016, "Years", true);
         gas = new MultipleChoiceDropDown(gasList, "Gas", true);
 
         controlComponents = new ArrayList<>();
