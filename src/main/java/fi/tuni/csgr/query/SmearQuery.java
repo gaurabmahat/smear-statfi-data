@@ -7,7 +7,7 @@ import fi.tuni.csgr.components.SingleChoiceDropdown;
 import fi.tuni.csgr.converters.json.JsonToResultConverter;
 import fi.tuni.csgr.converters.json.ResultList;
 import fi.tuni.csgr.converters.json.SmearJsonToResultConverter;
-import fi.tuni.csgr.managers.graphs.ChartManager;
+import fi.tuni.csgr.managers.graphs.SmearResultsView;
 import fi.tuni.csgr.managers.graphs.GraphDataManager;
 import fi.tuni.csgr.smearAndStatfi.SMEAR.fetchSeriesDataFromSmear.getTableVariable;
 import fi.tuni.csgr.smearAndStatfi.SMEAR.timeAndVariablesFromSmear.SmearTimeAndVariableData;
@@ -44,7 +44,7 @@ public class SmearQuery implements Query {
 
     private GraphDataManager graphDataManager;
     private JsonToResultConverter resultConverter;
-    private VBox resultView;
+    private Pane resultView;
 
     /**
      * Constructor protected, to make it only accessible through QuerySingletonFactory.
@@ -54,10 +54,8 @@ public class SmearQuery implements Query {
         initialDataFromSmear = new SmearTimeAndVariableData().getSmearTimeData();
         graphDataManager = new GraphDataManager();
         resultConverter = new SmearJsonToResultConverter();
-        resultView = new VBox();
-
-        // Connecting graphDataManager and resultView to chartManager, which handles all resultView updates
-        ChartManager chartManager = new ChartManager(graphDataManager, resultView);
+        // Create a resultView based on chartManager, which handles all resultView updates
+        resultView = new SmearResultsView(graphDataManager);
 
         // TO DO: The next two lists should be reimplemented to get data from initialDataFromSmear
         ObservableList<String> stationList = FXCollections.observableArrayList();

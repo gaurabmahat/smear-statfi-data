@@ -4,20 +4,17 @@ import fi.tuni.csgr.components.ChartView;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.XYChart;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 
 import java.util.HashMap;
 
-public class ChartManager {
-    GraphDataManager graphDataManager;
-    HashMap<String, ChartView> charts;
-    Pane chartContainer;
+public class SmearResultsView extends VBox {
+    private GraphDataManager graphDataManager;
+    private HashMap<String, ChartView> charts;
 
-    public ChartManager(GraphDataManager dataManager, Pane container) {
+    public SmearResultsView(GraphDataManager dataManager) {
         graphDataManager = dataManager;
-        chartContainer = container;
         charts = new HashMap<>();
-
         addGraphListeners();
     }
 
@@ -31,12 +28,12 @@ public class ChartManager {
             public void onChanged(Change change) {
                 String name = change.getKey().toString();
                 if(change.wasRemoved()) {
-                    chartContainer.getChildren().remove(charts.get(name).getChartBox());
+                    getChildren().remove(charts.get(name).getChartBox());
                     charts.remove(name);
                 }
                 if(change.wasAdded()) {
                     charts.put(name, new ChartView(name, (ObservableList<XYChart.Series<Long, Double>>) change.getValueAdded()));
-                    chartContainer.getChildren().add(charts.get(name).getChartBox());
+                    getChildren().add(charts.get(name).getChartBox());
                 }
             }
         };
