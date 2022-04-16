@@ -29,6 +29,10 @@ import java.util.Map;
 
 import static fi.tuni.csgr.stationNames.stationNameMapping.mapStationAndGas;
 
+/**
+ * A query containing all data specific to a SMEAR query.
+ */
+
 public class SmearQuery implements Query {
     private final Map<String, Station> initialDataFromSmear;
 
@@ -43,21 +47,31 @@ public class SmearQuery implements Query {
     private JsonToResultConverter resultConverter;
     private VBox resultView;
 
+    /**
+     * Constructor protected, to make it only accessible through QuerySingletonFactory.
+     */
+
     protected SmearQuery() {
+        // Initialize objects required for data fetching and conversion
         initialDataFromSmear = new smearTimeAndVariableData().getSmearTimeData();
         graphDataManager = new GraphDataManager();
         resultConverter = new SmearJsonToResultConverter();
         resultView = new VBox();
+
+        // Connecting graphDataManager and resultView to chartManager, which handles all resultView updates
         ChartManager chartManager = new ChartManager(graphDataManager, resultView);
 
+        // TO DO: The next two lists should be reimplemented to get data from initialDataFromSmear
         ObservableList<String> stationList = FXCollections.observableArrayList();
         mapStationAndGas.forEach((k,v) -> stationList.add(k) );
 
         ObservableList<String> gasList = FXCollections.observableArrayList();
         mapStationAndGas.get(stationList.get(0)).forEach((k,v) -> gasList.add(k));
 
+        // TO DO: Get these values from map that combines display name with fetch variable name
         ObservableList<String> typeList = FXCollections.observableArrayList("None", "Min", "Max");
 
+        // Create UI components and add to list of components
         from = new DateSelector(LocalDate.now().minusDays(2), "From date", true);
         to = new DateSelector(LocalDate.now(), "To date", true);
         gas = new MultipleChoiceDropDown(gasList, "Gas", true);
@@ -88,6 +102,10 @@ public class SmearQuery implements Query {
         return null;
     }
 
+    /**
+     *  Create Http request from currently selected values.
+     * @return
+     */
     @Override
     public HttpRequest getHttpRequest() {
         //Get table variables from the class getTableVariable
@@ -107,6 +125,12 @@ public class SmearQuery implements Query {
         return request;
     }
 
+    /**
+     * Convert JSON response from Smear to ResultList
+     *
+     * @param json
+     * @return
+     */
     @Override
     public ResultList JsonToResult(String json) {
         return resultConverter.convert(json);
@@ -117,11 +141,17 @@ public class SmearQuery implements Query {
         graphDataManager.update(results);
     }
 
+    /**
+     * @return Pane containing visualization of results.
+     */
     @Override
     public Pane getResultView() {
         return resultView;
     }
 
+    /**
+     * @return list of all UI components needed to select parameters of query
+     */
     @Override
     public ArrayList<ControlComponent> getControlComponents() {
         return controlComponents;
