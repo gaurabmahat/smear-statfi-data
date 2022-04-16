@@ -145,7 +145,7 @@ public class MainFXMLController implements Initializable {
         ObservableList<String> displayList = FXCollections.observableArrayList("selection", "selection", "selection", "selection");
         t1_cb_display.setItems(displayList);
 
-        initializeYearPicker();
+        //initializeYearPicker();
 
         // TESTING NEW LAYOUT COMPONENTS:
         VBox testBox = new VBox();
@@ -153,13 +153,6 @@ public class MainFXMLController implements Initializable {
         QuerySingletonFactory queryFactory = new QuerySingletonFactory();
         Query smearQuery = queryFactory.getInstance("SMEAR");
         smearQuery.getControlComponents().forEach(component -> testBox.getChildren().add(new ControlContainer(component)));
-    }
-
-    private void initializeYearPicker() {
-        YearPicker yearPicker = new YearPicker(1975, 2017);
-        yearPicker.setHideOnClick(false);
-        yearPicker.getStyleClass().add("year-picker-menu-item");
-        t2_year_picker.getItems().add(yearPicker);
     }
 
     /**

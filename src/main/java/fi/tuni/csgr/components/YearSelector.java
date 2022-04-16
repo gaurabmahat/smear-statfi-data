@@ -7,35 +7,29 @@ public class YearSelector implements ControlComponent {
 
     private String label;
     private boolean isMandatory;
-    private MenuButton control;
-    YearPicker yearPicker;
+    private YearPicker control;
 
     public YearSelector(int from, int to, String label, boolean isMandatory) {
         this.label = label;
         this.isMandatory = isMandatory;
-        control = new MenuButton();
-
-        yearPicker = new YearPicker(from, to);
-        yearPicker.setHideOnClick(false);
-        yearPicker.getStyleClass().add("year-picker-menu-item");
-        control.getItems().add(yearPicker);
+        control = new YearPicker(from, to);
     }
 
     public int getFromDate() {
-        return yearPicker.getStartYear();
+        return control.getStartYear();
     }
 
     public int getToDate() {
-        return yearPicker.getEndYear();
+        return control.getEndYear();
     }
 
     public void setRange(int from, int to) {
-        yearPicker.setRange(from, to);
+        control.setRange(from, to);
     }
 
     @Override
     public boolean selectionValid() {
-        if (isMandatory() && (yearPicker.getStartYear() == 0 || yearPicker.getEndYear() == 0)) {
+        if (isMandatory() && (control.getStartYear() == 0 || control.getEndYear() == 0)) {
             return false;
         }
         return true;

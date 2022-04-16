@@ -1,6 +1,7 @@
 package fi.tuni.csgr.components;
 
 import javafx.scene.control.CustomMenuItem;
+import javafx.scene.control.MenuButton;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -8,7 +9,7 @@ import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 
-public class YearPicker extends CustomMenuItem {
+public class YearPicker extends MenuButton {
     private VBox yearGrid;
     private static final int COLUMNS = 4;
     private int selectionStart;
@@ -28,7 +29,11 @@ public class YearPicker extends CustomMenuItem {
         yearGrid = new VBox();
         cells = new ArrayList<>();
         setRange(from, to);
-        this.setContent(yearGrid);
+        CustomMenuItem menuItem = new CustomMenuItem(yearGrid);
+        menuItem.setHideOnClick(false);
+        menuItem.getStyleClass().add("year-picker-menu-item");
+
+        this.getItems().add(menuItem);
         addGridMouseListeners();
     }
 
@@ -51,8 +56,8 @@ public class YearPicker extends CustomMenuItem {
         if (colIterator > 0) {
             yearGrid.getChildren().add(row);
         }
-        startYear = 0;
-        endYear = 0;
+        selectionStart = Integer.MIN_VALUE;
+        selectionEnd = Integer.MIN_VALUE;
         updateCells();
     }
 
@@ -99,6 +104,13 @@ public class YearPicker extends CustomMenuItem {
             else
                 cell.deselectCell();
         });
+        if (startYear > Integer.MIN_VALUE) {
+            if (startYear == endYear) {
+                this.setText(String.valueOf(startYear));
+            } else {
+                this.setText(startYear + "-" + endYear);
+            }
+        }
     }
 
     public int getStartYear() {
