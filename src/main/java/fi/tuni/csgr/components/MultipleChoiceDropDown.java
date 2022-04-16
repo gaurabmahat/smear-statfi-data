@@ -39,6 +39,17 @@ public class MultipleChoiceDropDown implements ControlComponent {
         return control;
     }
 
+    @Override
+    public ArrayList<String> getSelectionData() {
+        return control.getSelectedItems();
+    }
+
+    @Override
+    public void setSelectionData(ArrayList<String> data) {
+        control.clearSelections();
+        data.forEach(selection -> control.setSelected(selection));
+    }
+
     public ArrayList<String> getSelectedItems() {
         return control.getSelectedItems();
     }

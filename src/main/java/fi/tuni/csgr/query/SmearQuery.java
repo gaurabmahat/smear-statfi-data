@@ -7,6 +7,7 @@ import fi.tuni.csgr.components.SingleChoiceDropdown;
 import fi.tuni.csgr.converters.json.JsonToResultConverter;
 import fi.tuni.csgr.converters.json.ResultList;
 import fi.tuni.csgr.converters.json.SmearJsonToResultConverter;
+import fi.tuni.csgr.components.ControlPanel;
 import fi.tuni.csgr.query.resultviews.ResultView;
 import fi.tuni.csgr.query.resultviews.SmearResultsView;
 import fi.tuni.csgr.managers.graphs.GraphDataManager;
@@ -40,7 +41,7 @@ public class SmearQuery implements Query {
     private MultipleChoiceDropDown gas;
     private MultipleChoiceDropDown station;
     private SingleChoiceDropdown value;
-    private ArrayList<ControlComponent> controlComponents;
+    private ControlPanel controlPanel;
 
     private GraphDataManager graphDataManager;
     private JsonToResultConverter resultConverter;
@@ -67,7 +68,7 @@ public class SmearQuery implements Query {
         // TO DO: Get these values from map that combines display name with fetch variable name
         ObservableList<String> typeList = FXCollections.observableArrayList("None", "Min", "Max");
 
-        // Create UI components and add to list of components
+        // Create UI components and add to InputControls
         from = new DateSelector(LocalDate.now().minusDays(2), "From date", true);
         to = new DateSelector(LocalDate.now(), "To date", true);
         gas = new MultipleChoiceDropDown(gasList, "Gas", true);
@@ -75,12 +76,12 @@ public class SmearQuery implements Query {
         value = new SingleChoiceDropdown(typeList, "Value type", true);
         value.setSelection("None");
 
-        controlComponents = new ArrayList<>();
-        controlComponents.add(from);
-        controlComponents.add(to);
-        controlComponents.add(gas);
-        controlComponents.add(station);
-        controlComponents.add(value);
+        controlPanel = new ControlPanel();
+        controlPanel.addControl("fromDate", from);
+        controlPanel.addControl("toDate",to);
+        controlPanel.addControl("gas", gas);
+        controlPanel.addControl("station", station);
+        controlPanel.addControl("value", value);
     }
 
     @Override
@@ -94,8 +95,13 @@ public class SmearQuery implements Query {
     }
 
     @Override
-    public HashMap<String, ArrayList<String>> getQueryArgs() {
-        return null;
+    public HashMap<String, ArrayList<String>> getSelectionData() {
+        return controlPanel.getSelectionData();
+    }
+
+    @Override
+    public void setSelectionData(HashMap<String, ArrayList<String>> data) {
+        controlPanel.setSelectionData(data);
     }
 
     /**
@@ -148,7 +154,7 @@ public class SmearQuery implements Query {
      * @return list of all UI components needed to select parameters of query
      */
     @Override
-    public ArrayList<ControlComponent> getControlComponents() {
-        return controlComponents;
+    public ArrayList<ControlComponent> getControls() {
+        return controlPanel.getControlComponents();
     }
 }

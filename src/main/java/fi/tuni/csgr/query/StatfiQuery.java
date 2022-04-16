@@ -4,6 +4,7 @@ import fi.tuni.csgr.components.*;
 import fi.tuni.csgr.converters.json.JsonToResultConverter;
 import fi.tuni.csgr.converters.json.ResultList;
 import fi.tuni.csgr.converters.json.StatfiJsonToResultConverter;
+import fi.tuni.csgr.components.ControlPanel;
 import fi.tuni.csgr.query.resultviews.ResultView;
 import fi.tuni.csgr.query.resultviews.SmearResultsView;
 import fi.tuni.csgr.managers.graphs.GraphDataManager;
@@ -29,7 +30,7 @@ public class StatfiQuery implements  Query {
 
     private YearSelector years;
     private MultipleChoiceDropDown gas;
-    private ArrayList<ControlComponent> controlComponents;
+    private ControlPanel controlPanel;
 
     private JsonToResultConverter resultConverter;
     private GraphDataManager graphDataManager;
@@ -53,9 +54,9 @@ public class StatfiQuery implements  Query {
         years = new YearSelector(1990, 2016, "Years", true);
         gas = new MultipleChoiceDropDown(gasList, "Gas", true);
 
-        controlComponents = new ArrayList<>();
-        controlComponents.add(years);
-        controlComponents.add(gas);
+        controlPanel = new ControlPanel();
+        controlPanel.addControl("years", years);
+        controlPanel.addControl("gas", gas);
     }
 
     @Override
@@ -69,8 +70,13 @@ public class StatfiQuery implements  Query {
     }
 
     @Override
-    public HashMap<String, ArrayList<String>> getQueryArgs() {
-        return null;
+    public HashMap<String, ArrayList<String>> getSelectionData() {
+        return controlPanel.getSelectionData();
+    }
+
+    @Override
+    public void setSelectionData(HashMap<String, ArrayList<String>> data) {
+        controlPanel.setSelectionData(data);
     }
 
     /**
@@ -123,8 +129,8 @@ public class StatfiQuery implements  Query {
      * @return list of all UI components needed to select parameters of query
      */
     @Override
-    public ArrayList<ControlComponent> getControlComponents() {
-        return controlComponents;
+    public ArrayList<ControlComponent> getControls() {
+        return controlPanel.getControlComponents();
     }
 
     private String getStatfiPOSTString(){

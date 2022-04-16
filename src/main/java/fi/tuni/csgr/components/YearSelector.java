@@ -3,6 +3,8 @@ package fi.tuni.csgr.components;
 import javafx.scene.control.Control;
 import javafx.scene.control.MenuButton;
 
+import java.util.ArrayList;
+
 public class YearSelector implements ControlComponent {
 
     private String label;
@@ -48,5 +50,20 @@ public class YearSelector implements ControlComponent {
     @Override
     public Control getControl() {
         return control;
+    }
+
+    @Override
+    public ArrayList<String> getSelectionData() {
+        ArrayList<String> data = new ArrayList<>();
+        data.add(String.valueOf(control.getStartYear()));
+        data.add(String.valueOf(control.getEndYear()));
+        return data;
+    }
+
+    @Override
+    public void setSelectionData(ArrayList<String> data) {
+        int start = Integer.valueOf(data.get(0));
+        int end = Integer.valueOf(data.get(1));
+        control.setSelection(start, end);
     }
 }

@@ -1,7 +1,6 @@
 package fi.tuni.csgr.query;
 
 import fi.tuni.csgr.components.ControlComponent;
-import fi.tuni.csgr.converters.json.JsonToResultConverter;
 import fi.tuni.csgr.converters.json.ResultList;
 import javafx.scene.layout.Pane;
 
@@ -21,7 +20,8 @@ import java.util.HashMap;
 public interface Query {
     LocalDate getFromDate();
     LocalDate getToDate();
-    HashMap<String, ArrayList<String>> getQueryArgs();
+    HashMap<String, ArrayList<String>> getSelectionData();
+    void setSelectionData(HashMap<String, ArrayList<String>> data);
 
     HttpRequest getHttpRequest();
     ResultList JsonToResult(String json);
@@ -29,5 +29,5 @@ public interface Query {
 
     Pane getResultView();
 
-    ArrayList<ControlComponent> getControlComponents();
+    ArrayList<ControlComponent> getControls();
 }

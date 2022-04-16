@@ -120,4 +120,10 @@ public class YearPicker extends MenuButton {
     public int getEndYear() {
         return endYear;
     }
+
+    public void setSelection(int start, int end) {
+        selectionStart = start;
+        selectionEnd = end;
+        updateCells();
+    }
 }

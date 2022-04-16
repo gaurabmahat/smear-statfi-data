@@ -20,7 +20,6 @@ import fi.tuni.csgr.smearAndStatfi.SMEAR.timeAndVariablesFromSmear.SmearTimeAndV
 import fi.tuni.csgr.stationNames.Station;
 import fi.tuni.csgr.utils.DatePickerUtils;
 import fi.tuni.csgr.components.CheckBoxMenu;
-import fi.tuni.csgr.components.YearPicker;
 import fi.tuni.csgr.managers.userdata.UserDataManager;
 import fi.tuni.csgr.utils.SelectionData;
 import javafx.beans.binding.Bindings;
@@ -152,7 +151,7 @@ public class MainFXMLController implements Initializable {
         tab3.setContent(testBox);
         QuerySingletonFactory queryFactory = new QuerySingletonFactory();
         Query smearQuery = queryFactory.getInstance("SMEAR");
-        smearQuery.getControlComponents().forEach(component -> testBox.getChildren().add(new ControlContainer(component)));
+        smearQuery.getControls().forEach(component -> testBox.getChildren().add(new ControlContainer(component)));
     }
 
     /**

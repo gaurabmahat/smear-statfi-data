@@ -4,6 +4,8 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
 
+import java.util.ArrayList;
+
 public class SingleChoiceDropdown implements ControlComponent {
     private ComboBox control;
     private String label;
@@ -36,6 +38,18 @@ public class SingleChoiceDropdown implements ControlComponent {
     @Override
     public Control getControl() {
         return control;
+    }
+
+    @Override
+    public ArrayList<String> getSelectionData() {
+        ArrayList<String> data = new ArrayList<>();
+        data.add(control.getSelectionModel().toString());
+        return data;
+    }
+
+    @Override
+    public void setSelectionData(ArrayList<String> data) {
+        control.getSelectionModel().select(data.get(0));
     }
 
     public String getSelection() {

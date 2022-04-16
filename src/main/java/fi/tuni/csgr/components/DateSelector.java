@@ -4,6 +4,8 @@ import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 import static fi.tuni.csgr.utils.DatePickerUtils.restrictDatePicker;
 
@@ -39,6 +41,19 @@ public class DateSelector implements ControlComponent {
     @Override
     public Control getControl() {
         return control;
+    }
+
+    @Override
+    public ArrayList<String> getSelectionData() {
+        ArrayList<String> data = new ArrayList<>();
+        data.add(control.getValue().format(DateTimeFormatter.ISO_LOCAL_DATE));
+        return data;
+    }
+
+    @Override
+    public void setSelectionData(ArrayList<String> data) {
+        LocalDate date = LocalDate.parse(data.get(0));
+        control.setValue(date);
     }
 
     public void limitDatePicker(LocalDate minDate, LocalDate maxDate) {

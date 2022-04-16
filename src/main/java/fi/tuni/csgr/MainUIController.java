@@ -63,7 +63,7 @@ public class MainUIController implements Initializable {
     void handleQuerySelector(ActionEvent event) {
         controlsContainer.getChildren().clear();
         currentQuery = queryFactory.getInstance(querySelector.getValue());
-        currentQuery.getControlComponents().forEach(component ->
+        currentQuery.getControls().forEach(component ->
                 controlsContainer.getChildren().add(new ControlContainer(component)));
         Pane resultView = currentQuery.getResultView();
         resultView.prefWidthProperty().bind(Bindings.add(-38, viewPane.widthProperty()));
@@ -79,7 +79,7 @@ public class MainUIController implements Initializable {
     void handleShowBtn(ActionEvent event) {
         boolean queryValid = true;
         ArrayList<String> missingValues = new ArrayList<>();
-        for (ControlComponent component : currentQuery.getControlComponents()) {
+        for (ControlComponent component : currentQuery.getControls()) {
             if (!component.selectionValid()) {
                 queryValid = false;
                 missingValues.add(component.getLabel());
