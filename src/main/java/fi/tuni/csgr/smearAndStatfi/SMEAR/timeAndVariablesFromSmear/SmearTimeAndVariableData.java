@@ -1,7 +1,6 @@
 package fi.tuni.csgr.smearAndStatfi.SMEAR.timeAndVariablesFromSmear;
 
 import com.google.gson.*;
-import fi.tuni.csgr.MainFXMLController;
 import fi.tuni.csgr.stationNames.Gases;
 import fi.tuni.csgr.stationNames.Station;
 import fi.tuni.csgr.stationNames.Values;
@@ -20,14 +19,14 @@ import java.util.*;
  * Class to fetch the gases and their periodStart and periodEnd times from the SMEAR station. It fetches the gases
  * that are closer to the current date.
  */
-public class smearTimeAndVariableData {
+public class SmearTimeAndVariableData {
 
     private final Map<String, Station> mapOfStationClass;
 
     /**
      * Initializes the map
      */
-    public smearTimeAndVariableData() {
+    public SmearTimeAndVariableData() {
         mapOfStationClass = new HashMap<>();
     }
 
@@ -60,7 +59,7 @@ public class smearTimeAndVariableData {
             JsonObject urlObject = urlArray.get(i).getAsJsonObject();
             String stationName = urlObject.get("name").getAsString();
 
-            if (predefinedStationsInfo
+            if (PredefinedStationsInfo
                     .stationNameTableVariableName
                     .containsKey(stationName)
             ) {
@@ -98,7 +97,7 @@ public class smearTimeAndVariableData {
 
             for (int i = 0; i < urlArray.size(); i++) {
                 JsonObject urlObject = urlArray.get(i).getAsJsonObject();
-                if (predefinedStationsInfo
+                if (PredefinedStationsInfo
                         .stationNameTableVariableName
                         .get(nameOfTheStation)
                         .contains(urlObject.get("name").getAsString())
@@ -143,10 +142,10 @@ public class smearTimeAndVariableData {
             newArray.addAll(urlArray);
         }
 
-        for(var gas : predefinedStationsInfo.gasAndItsKeywords.keySet()){
+        for(var gas : PredefinedStationsInfo.gasAndItsKeywords.keySet()){
             //Map to store the gas variable name and periodStart, periodEnd values, with key as LocalDate of the periodEnd
             TreeMap<LocalDate, Values> gasTimeStamp = new TreeMap<>();
-            gasTimeStamp.putAll(gasVariableNameAndTime(newArray, predefinedStationsInfo.gasAndItsKeywords.get(gas)));
+            gasTimeStamp.putAll(gasVariableNameAndTime(newArray, PredefinedStationsInfo.gasAndItsKeywords.get(gas)));
             gases.add(new Gases(gas, gasTimeStamp.get(gasTimeStamp.lastKey())));
         }
 

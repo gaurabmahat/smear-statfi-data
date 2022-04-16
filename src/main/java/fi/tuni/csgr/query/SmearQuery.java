@@ -10,7 +10,7 @@ import fi.tuni.csgr.converters.json.SmearJsonToResultConverter;
 import fi.tuni.csgr.managers.graphs.ChartManager;
 import fi.tuni.csgr.managers.graphs.GraphDataManager;
 import fi.tuni.csgr.smearAndStatfi.SMEAR.fetchSeriesDataFromSmear.getTableVariable;
-import fi.tuni.csgr.smearAndStatfi.SMEAR.timeAndVariablesFromSmear.smearTimeAndVariableData;
+import fi.tuni.csgr.smearAndStatfi.SMEAR.timeAndVariablesFromSmear.SmearTimeAndVariableData;
 import fi.tuni.csgr.stationNames.Station;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,7 +18,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 import java.net.URI;
-import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -52,8 +51,7 @@ public class SmearQuery implements Query {
      */
 
     protected SmearQuery() {
-        // Initialize objects required for data fetching and conversion
-        initialDataFromSmear = new smearTimeAndVariableData().getSmearTimeData();
+        initialDataFromSmear = new SmearTimeAndVariableData().getSmearTimeData();
         graphDataManager = new GraphDataManager();
         resultConverter = new SmearJsonToResultConverter();
         resultView = new VBox();
@@ -116,7 +114,6 @@ public class SmearQuery implements Query {
         String startTime = fromTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         String endTime = toTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
-        HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://smear-backend.rahtiapp.fi/search/timeseries?aggregation="
                 + value.getSelection().toUpperCase()
                 + "&interval=60&from="+ startTime
