@@ -52,8 +52,6 @@ public class SmearQuery implements Query {
 
     protected SmearQuery() {
         initialDataFromSmear = new SmearTimeAndVariableData().getSmearTimeData();
-        // Initialize objects required for data fetching and conversion
-        initialDataFromSmear = new smearTimeAndVariableData().getSmearTimeData();
         graphDataManager = new GraphDataManager();
         resultConverter = new SmearJsonToResultConverter();
         resultView = new VBox();
