@@ -16,7 +16,7 @@ import fi.tuni.csgr.network.Network;
 import fi.tuni.csgr.network.SmearNetwork;
 import fi.tuni.csgr.query.Query;
 import fi.tuni.csgr.query.QuerySingletonFactory;
-import fi.tuni.csgr.smearAndStatfi.SMEAR.timeAndVariablesFromSmear.smearTimeAndVariableData;
+import fi.tuni.csgr.smearAndStatfi.SMEAR.timeAndVariablesFromSmear.SmearTimeAndVariableData;
 import fi.tuni.csgr.stationNames.Station;
 import fi.tuni.csgr.utils.DatePickerUtils;
 import fi.tuni.csgr.components.CheckBoxMenu;
@@ -188,7 +188,7 @@ public class MainFXMLController implements Initializable {
     /**
      * Initial data from SMEAR
      */
-    public static final Map<String, Station> getInitialDataFromSmear = new smearTimeAndVariableData().getSmearTimeData();
+    public static final Map<String, Station> getInitialDataFromSmear = new SmearTimeAndVariableData().getSmearTimeData();
 
     @FXML
     private void handleT1DatePickerFrom(ActionEvent event) {
