@@ -6,6 +6,7 @@ import fi.tuni.csgr.converters.json.ResultList;
 import fi.tuni.csgr.converters.json.StatfiJsonToResultConverter;
 import fi.tuni.csgr.managers.graphs.ChartManager;
 import fi.tuni.csgr.managers.graphs.GraphDataManager;
+import fi.tuni.csgr.smearAndStatfi.SMEAR.timeAndVariablesFromSmear.PredefinedStationsInfo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.Pane;
@@ -101,7 +102,12 @@ public class StatfiQuery implements  Query {
     }
 
     private String getStatfiPOSTString(){
-        var tiedotList = gas.getSelectedItems();
+        var getTiedot = gas.getSelectedItems();
+        List<String> tiedotList = new ArrayList<>();
+
+        for(var i : getTiedot){
+            tiedotList.add(PredefinedStationsInfo.statfiValues.get(i));
+        }
 
         List<Integer> vuosiList = new ArrayList<>();
         IntStream
