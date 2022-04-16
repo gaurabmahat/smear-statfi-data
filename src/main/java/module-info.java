@@ -16,4 +16,6 @@ module fi.tuni.csgr {
     opens fi.tuni.csgr.utils to com.google.gson;
     opens fi.tuni.csgr.managers.userdata to com.google.gson;
     opens fi.tuni.csgr.components to com.google.gson;
+    exports fi.tuni.csgr.query.resultviews;
+    opens fi.tuni.csgr.query.resultviews to javafx.fxml;
 }

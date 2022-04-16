@@ -4,13 +4,13 @@ import fi.tuni.csgr.components.*;
 import fi.tuni.csgr.converters.json.JsonToResultConverter;
 import fi.tuni.csgr.converters.json.ResultList;
 import fi.tuni.csgr.converters.json.StatfiJsonToResultConverter;
-import fi.tuni.csgr.managers.graphs.SmearResultsView;
+import fi.tuni.csgr.query.resultviews.ResultView;
+import fi.tuni.csgr.query.resultviews.SmearResultsView;
 import fi.tuni.csgr.managers.graphs.GraphDataManager;
 import fi.tuni.csgr.smearAndStatfi.SMEAR.timeAndVariablesFromSmear.PredefinedStationsInfo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -33,7 +33,7 @@ public class StatfiQuery implements  Query {
 
     private JsonToResultConverter resultConverter;
     private GraphDataManager graphDataManager;
-    private Pane resultView;
+    private ResultView resultView;
 
     /**
      * Constructor protected, to make it only accessible through QuerySingletonFactory.
@@ -111,7 +111,7 @@ public class StatfiQuery implements  Query {
      */
     @Override
     public Pane getResultView() {
-        return resultView;
+        return resultView.getResultView();
     }
 
     @Override

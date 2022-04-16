@@ -7,7 +7,8 @@ import fi.tuni.csgr.components.SingleChoiceDropdown;
 import fi.tuni.csgr.converters.json.JsonToResultConverter;
 import fi.tuni.csgr.converters.json.ResultList;
 import fi.tuni.csgr.converters.json.SmearJsonToResultConverter;
-import fi.tuni.csgr.managers.graphs.SmearResultsView;
+import fi.tuni.csgr.query.resultviews.ResultView;
+import fi.tuni.csgr.query.resultviews.SmearResultsView;
 import fi.tuni.csgr.managers.graphs.GraphDataManager;
 import fi.tuni.csgr.smearAndStatfi.SMEAR.fetchSeriesDataFromSmear.getTableVariable;
 import fi.tuni.csgr.smearAndStatfi.SMEAR.timeAndVariablesFromSmear.SmearTimeAndVariableData;
@@ -15,7 +16,6 @@ import fi.tuni.csgr.stationNames.Station;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 
 import java.net.URI;
 import java.net.http.HttpRequest;
@@ -44,7 +44,7 @@ public class SmearQuery implements Query {
 
     private GraphDataManager graphDataManager;
     private JsonToResultConverter resultConverter;
-    private Pane resultView;
+    private ResultView resultView;
 
     /**
      * Constructor protected, to make it only accessible through QuerySingletonFactory.
@@ -141,7 +141,7 @@ public class SmearQuery implements Query {
      */
     @Override
     public Pane getResultView() {
-        return resultView;
+        return resultView.getResultView();
     }
 
     /**
