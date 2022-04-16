@@ -4,7 +4,7 @@ import fi.tuni.csgr.components.*;
 import fi.tuni.csgr.converters.json.JsonToResultConverter;
 import fi.tuni.csgr.converters.json.ResultList;
 import fi.tuni.csgr.converters.json.StatfiJsonToResultConverter;
-import fi.tuni.csgr.managers.graphs.ChartManager;
+import fi.tuni.csgr.managers.graphs.SmearResultsView;
 import fi.tuni.csgr.managers.graphs.GraphDataManager;
 import fi.tuni.csgr.smearAndStatfi.SMEAR.timeAndVariablesFromSmear.PredefinedStationsInfo;
 import javafx.collections.FXCollections;
@@ -14,7 +14,6 @@ import javafx.scene.layout.VBox;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ public class StatfiQuery implements  Query {
 
     private JsonToResultConverter resultConverter;
     private GraphDataManager graphDataManager;
-    private VBox resultView;
+    private Pane resultView;
 
     /**
      * Constructor protected, to make it only accessible through QuerySingletonFactory.
@@ -43,10 +42,9 @@ public class StatfiQuery implements  Query {
         // Initialize objects required for data fetching and conversion
         graphDataManager = new GraphDataManager();
         resultConverter = new StatfiJsonToResultConverter();
-        resultView = new VBox();
+        // Create a resultView based on chartManager, which handles all resultView updates
+        resultView = new SmearResultsView(graphDataManager);
 
-        // Connecting graphDataManager and resultView to chartManager, which handles all resultView updates
-        ChartManager chartManager = new ChartManager(graphDataManager, resultView);
 
         // TO DO: Need a map to connect these to variables for http query
         ObservableList<String> gasList = FXCollections.observableArrayList("CO2 tonnes", "CO2 intensity", "CO2 indexed", "CO2 indexed intensity");
