@@ -17,7 +17,6 @@
 
 package fi.tuni.csgr.smearAndStatfi.SMEAR.fetchSeriesDataFromSmear;
 
-import fi.tuni.csgr.MainFXMLController;
 import fi.tuni.csgr.stationNames.stationNameMapping;
 
 import java.util.Arrays;

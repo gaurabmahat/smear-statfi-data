@@ -1,7 +1,6 @@
 package fi.tuni.csgr.smearAndStatfi.SMEAR.timeAndVariablesFromSmear;
 
 import com.google.gson.*;
-import fi.tuni.csgr.MainFXMLController;
 import fi.tuni.csgr.stationNames.Gases;
 import fi.tuni.csgr.stationNames.Station;
 import fi.tuni.csgr.stationNames.Values;

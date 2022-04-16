@@ -2,6 +2,9 @@ package fi.tuni.csgr;
 
 import fi.tuni.csgr.components.ControlComponent;
 import fi.tuni.csgr.components.ControlContainer;
+import fi.tuni.csgr.managers.userdata.ErrorReadingUserDataException;
+import fi.tuni.csgr.managers.userdata.ErrorWritingUserDataException;
+import fi.tuni.csgr.managers.userdata.UserDataManager;
 import fi.tuni.csgr.network.QueryClient;
 import fi.tuni.csgr.query.QueriesInfo;
 import fi.tuni.csgr.query.Query;
@@ -16,8 +19,10 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class MainUIController implements Initializable {
@@ -25,6 +30,7 @@ public class MainUIController implements Initializable {
     private QuerySingletonFactory queryFactory;
     private Query currentQuery;
     private QueryClient queryClient;
+    private UserDataManager userDataManager;
 
     private String defaultText = "COMP.SE.110 2022 Project work - By CSGR";
 
@@ -56,7 +62,19 @@ public class MainUIController implements Initializable {
 
     @FXML
     void handleLoad(ActionEvent event) {
-
+        try {
+            UserDataManager.SelectionData savedSelection = userDataManager.readSelection(querySelector.getValue());
+            // TODO: set selectors to retrived values
+            for(Map.Entry<String, ArrayList<String>> searchData: savedSelection.getSelectionArgs().entrySet()){
+                String fieldName = searchData.getKey();
+                ArrayList<String> values = searchData.getValue();
+                // TODO: add setting other fields to rertrieved values
+            }
+        } catch (ErrorReadingUserDataException e) {
+            showAlert("Error while reading the saved selection");
+        } catch (FileNotFoundException e) {
+            showAlert("No saved selection found");
+        }
     }
 
     @FXML
@@ -72,7 +90,29 @@ public class MainUIController implements Initializable {
 
     @FXML
     void handleSave(ActionEvent event) {
-
+        boolean queryValid = true;
+        ArrayList<String> missingValues = new ArrayList<>();
+        for (ControlComponent component : currentQuery.getControlComponents()) {
+            if (!component.selectionValid()) {
+                queryValid = false;
+                missingValues.add(component.getLabel());
+            }
+        }
+        if (queryValid) {
+            UserDataManager.SelectionData selection = new UserDataManager.SelectionData(
+                    currentQuery.getFromDate(),
+                    currentQuery.getToDate(),
+                    currentQuery.getQueryArgs());
+            try {
+                userDataManager.saveSelection(querySelector.getValue(), selection);
+                showAlert("Selection saved!");
+            } catch (ErrorWritingUserDataException e) {
+                showAlert("Error while saving selection.");
+            }
+        }
+        else {
+            showAlert("Please select " + String.join(", ", missingValues) + " to save selection");
+        }
     }
 
     @FXML
@@ -99,6 +139,7 @@ public class MainUIController implements Initializable {
         queryFactory = new QuerySingletonFactory();
         queryClient = new QueryClient();
         footerText.setText(defaultText);
+        userDataManager = new UserDataManager(System.getProperty("user.dir"));
     }
 
     public void showAlert(String msg) {

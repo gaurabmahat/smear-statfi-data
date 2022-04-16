@@ -1,17 +1,55 @@
 package fi.tuni.csgr.managers.userdata;
 
 import com.google.gson.Gson;
-import fi.tuni.csgr.utils.SelectionData;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Map;
 
 public class UserDataManager {
 
     private static Path userDataLocation;
     private static final Gson gson = new Gson();
+
+    public static class SelectionData {
+        String fromDate;
+        String toDate;
+        Map<String, ArrayList<String>> selectionArgs;
+
+        public SelectionData(LocalDate fromDate, LocalDate toDate, Map<String, ArrayList<String>> searchData) {
+            this.fromDate = String.valueOf(fromDate);
+            this.toDate = String.valueOf(toDate);
+            this.selectionArgs = searchData;
+        }
+
+        public LocalDate getFromDate() {
+            return LocalDate.parse(fromDate);
+        }
+
+        public LocalDate getToDate() {
+            return LocalDate.parse(toDate);
+        }
+
+        public Map<String, ArrayList<String>> getSelectionArgs() {
+            return selectionArgs;
+        }
+
+        public void setFromDate(String fromDate) {
+            this.fromDate = fromDate;
+        }
+
+        public void setToDate(String toDate) {
+            this.toDate = toDate;
+        }
+
+        public void setSelectionArgs(Map<String, ArrayList<String>> selectionArgs) {
+            this.selectionArgs = selectionArgs;
+        }
+    }
+
 
     public UserDataManager(String dirPath) {
         userDataLocation = Path.of(dirPath).resolve("user_data");
@@ -19,6 +57,8 @@ public class UserDataManager {
 
     public void saveSelection(String source, SelectionData selectionData) throws ErrorWritingUserDataException {
         writeToFile(source, gson.toJson(selectionData));
+        System.out.println(gson.toJson(selectionData));
+        System.out.println(selectionData.selectionArgs);
     }
 
     public SelectionData readSelection(String source) throws ErrorReadingUserDataException, FileNotFoundException {

@@ -22,7 +22,6 @@ import fi.tuni.csgr.utils.DatePickerUtils;
 import fi.tuni.csgr.components.CheckBoxMenu;
 import fi.tuni.csgr.components.YearPicker;
 import fi.tuni.csgr.managers.userdata.UserDataManager;
-import fi.tuni.csgr.utils.SelectionData;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
@@ -211,37 +210,12 @@ public class MainFXMLController implements Initializable {
 
     @FXML
     private void handleSaveBtn() {
-        if (selectedGases.isEmpty() | selectedStations.isEmpty()) {
-            showAlert("Please select a gas and a station to save selection.");
-        }
-        else {
-            SelectionData selection = new SelectionData(SelectionData.Type.SMEAR, fromDate, toDate, new HashMap<>(){});
-            // TODO: save other fields and their values
-            try {
-                userDataManager.saveSelection("SMEAR", selection);
-                showAlert("Selection saved!");
-            } catch (ErrorWritingUserDataException e) {
-                showAlert("Error while saving selection.");
-            }
-        }
+
     }
 
     @FXML
     private void handleLoadBtn() {
-        try {
-            SelectionData savedSelection = userDataManager.readSelection("SMEAR");
-            t1_datePicker_from.setValue(savedSelection.getFromDate());
-            t1_datePicker_to.setValue(savedSelection.getToDate());
-            for(Map.Entry<String, ArrayList<String>> searchData: savedSelection.getSearchData().entrySet()){
-                String fieldName = searchData.getKey();
-                ArrayList<String> values = searchData.getValue();
-                // TODO: add setting other fields to rertrieved values
-            }
-        } catch (ErrorReadingUserDataException e) {
-            showAlert("Error while reading the saved selection");
-        } catch (FileNotFoundException e) {
-            showAlert("No saved selection found");
-        }
+
     }
 
     private List<String> getListFromString(String stringList){
