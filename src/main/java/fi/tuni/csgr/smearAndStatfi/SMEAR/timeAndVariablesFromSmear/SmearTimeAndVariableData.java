@@ -58,9 +58,6 @@ public class SmearTimeAndVariableData {
 
     /**
      * This method will add the station name as the key and Station class as the values in the map.
-     * First it checks if the variable table name exists in the class PredefinedStationsInfo. It then fetches the
-     * variable table id of the given variable table name. It creates a Station class with all the required info and
-     * adds it to the map mapOfStationClass.
      * Ex: In Kumpula, when two of its variable table names are given, in this instance: "KUM_META" and "KUM_EDDY",
      * it gets a list of its variable tables [2, 8].
      * It calls two inner methods getSmearJsonArray and getMapOfTimeStamp and one class PredefinedStationsInfo
@@ -104,8 +101,6 @@ public class SmearTimeAndVariableData {
 
     /**
      * This method returns a list containing the Gases class.
-     * It calls an inner method gasVariableNameAndTime where it passes a JsonArray and a string parameter that will
-     * decide which gas variable to search for.
      * It calls two inner methods getSmearJsonArray and gasVariableNameAndTime.
      *
      * @param url_        url of the SMEAR website of variable tables of s station.
@@ -139,8 +134,8 @@ public class SmearTimeAndVariableData {
     }
 
     /**
-     * This method checks for given string in the title field of the given JsonArray. It fetches the periodStart and
-     * periodEnd values from the matching variable.
+     * This method checks for given string in the title field of the given JsonArray. It fetches the periodStart,
+     * periodEnd values and variable name values.
      *
      * @param jArray      JsonArray fetched from the SMEAR API
      * @param givenTitle_ string to match in the title field of the variable data
@@ -149,6 +144,11 @@ public class SmearTimeAndVariableData {
     private static TreeMap<LocalDate, Values> gasVariableNameAndTime(JsonArray jArray, String givenTitle_) {
         //TreeMap to store Date LocalDate of periodEnd, gas table variable name and periodStart, periodEnd values
         TreeMap<LocalDate, Values> gasVariable = new TreeMap<>();
+        //For Hyytiälä "CO₂ concentration" keyword does not give current values
+        if(givenTitle_.equals("CO₂ concentration") &&
+                jArray.get(0).getAsJsonObject().get("tableName").getAsString().equals("HYY_META")){
+            givenTitle_ = "CO₂";
+        }
 
         for (int i = 0; i < jArray.size(); i++) {
             JsonObject jObject = jArray.get(i).getAsJsonObject();
@@ -219,7 +219,7 @@ public class SmearTimeAndVariableData {
         return urlArray;
     }
 
-    /*public static void main(String[] args) {
+    public static void main(String[] args) {
         var sinfo =  SmearTimeAndVariableData.getSmearTimeData();
         for(var i : sinfo.keySet()){
             System.out.println(i);
@@ -231,6 +231,6 @@ public class SmearTimeAndVariableData {
 
             }
         }
-    }*/
+    }
 
 }
