@@ -21,24 +21,7 @@ import java.util.*;
  */
 public class SmearTimeAndVariableData {
 
-    private final Map<String, Station> mapOfStationClass;
-
-    /**
-     * Initializes the map
-     */
-    public SmearTimeAndVariableData() {
-        mapOfStationClass = new HashMap<>();
-    }
-
-    /**
-     * Calculates the data from the SMEAR API to get the gas variables. Returns a map with all the required information.
-     *
-     * @return map that contains name of the station as key and Station class as value.
-     */
-    public Map<String, Station> getSmearTimeData() {
-        getMapOfStationNameAndId();
-        return mapOfStationClass;
-    }
+    public static final Map<String, Station> smearMapData = getSmearTimeData();
 
     /**
      * This method can be used to get the station id from SMEAR based on the given station name.
@@ -46,7 +29,8 @@ public class SmearTimeAndVariableData {
      * This method checks if the station name exists in the class predefinedStationsInfo.
      * It also calls two inner methods getSmearJsonArray and getTableVariableIdOfAStation
      */
-    private void getMapOfStationNameAndId() {
+    private static Map<String, Station> getSmearTimeData() {
+        Map<String, Station> mapOfStationClass = new HashMap<>();
 
         //map to store the station name and its id
         Map<String, Integer> mapOfStationNameAndStationId = new HashMap();
@@ -67,21 +51,23 @@ public class SmearTimeAndVariableData {
             }
         }
         //call getTableVariableIdOfAStation method
-        if (!mapOfStationNameAndStationId.isEmpty()) getTableVariableIdOfAStation(mapOfStationNameAndStationId);
+        if (!mapOfStationNameAndStationId.isEmpty()) getTableVariableIdOfAStation(mapOfStationNameAndStationId, mapOfStationClass);
+        return mapOfStationClass;
+
     }
 
     /**
-     * This method creates a map that will contain the station name as the key and Station class as the values.
-     * First it checks if the variable table name exists in the class predefinedStationsInfo. It then fetches the
+     * This method will add the station name as the key and Station class as the values in the map.
+     * First it checks if the variable table name exists in the class PredefinedStationsInfo. It then fetches the
      * variable table id of the given variable table name. It creates a Station class with all the required info and
      * adds it to the map mapOfStationClass.
      * Ex: In Kumpula, when two of its variable table names are given, in this instance: "KUM_META" and "KUM_EDDY",
      * it gets a list of its variable tables [2, 8].
-     * It calls two inner methods getSmearJsonArray and getMapOfTimeStamp and one class predefinedStationsInfo
+     * It calls two inner methods getSmearJsonArray and getMapOfTimeStamp and one class PredefinedStationsInfo
      *
      * @param stationNameAndStationId map containing the name of the stations and its ids
      */
-    private void getTableVariableIdOfAStation(Map<String, Integer> stationNameAndStationId) {
+    private static void getTableVariableIdOfAStation(Map<String, Integer> stationNameAndStationId, Map<String, Station> mapOfStationClass_) {
 
         for (var nameOfTheStation : stationNameAndStationId.keySet()) {
 
@@ -112,7 +98,7 @@ public class SmearTimeAndVariableData {
                 sName.addGasToStationMap(gas);
             }
 
-            mapOfStationClass.put(sName.getName(), sName);
+            mapOfStationClass_.put(sName.getName(), sName);
         }
     }
 
@@ -126,7 +112,7 @@ public class SmearTimeAndVariableData {
      * @param tableIdList a list that contains the table ids of variable tables of a station.
      * @return a list of the Gases class.
      */
-    private List<Gases> getListOfGasesClass(String url_, List<Integer> tableIdList) {
+    private static List<Gases> getListOfGasesClass(String url_, List<Integer> tableIdList) {
         List<Gases> gases = new ArrayList<>();
 
         //add all the JsonArray from all the table variables
@@ -160,7 +146,7 @@ public class SmearTimeAndVariableData {
      * @param givenTitle_ string to match in the title field of the variable data
      * @return TreeMap with LocalDate of the periodEnd as the key and the class Values os the value.
      */
-    private TreeMap<LocalDate, Values> gasVariableNameAndTime(JsonArray jArray, String givenTitle_) {
+    private static TreeMap<LocalDate, Values> gasVariableNameAndTime(JsonArray jArray, String givenTitle_) {
         //TreeMap to store Date LocalDate of periodEnd, gas table variable name and periodStart, periodEnd values
         TreeMap<LocalDate, Values> gasVariable = new TreeMap<>();
 
@@ -168,6 +154,9 @@ public class SmearTimeAndVariableData {
             JsonObject jObject = jArray.get(i).getAsJsonObject();
 
             if (jObject.get("title").isJsonNull() || jObject.get("periodStart").isJsonNull()) continue;
+            //Restricting some values from SMEAR
+            if (jObject.get("title").getAsString().contains("Std of")) continue;
+            if(jObject.get("name").getAsString().contains("NOtower")) continue;
 
             if (jObject.get("title").getAsString().contains(givenTitle_)) {
 
@@ -215,7 +204,7 @@ public class SmearTimeAndVariableData {
      * @param url url to fetch the Json Array from
      * @return return JsonArray fetched from the API
      */
-    private JsonArray getSmearJsonArray(String url) {
+    private static JsonArray getSmearJsonArray(String url) {
         //data from SMEAR API
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
@@ -231,17 +220,17 @@ public class SmearTimeAndVariableData {
     }
 
     /*public static void main(String[] args) {
-        var sinfo =  new smearTimeAndVariableData().getSmearTimeData();
+        var sinfo =  SmearTimeAndVariableData.getSmearTimeData();
         for(var i : sinfo.keySet()){
             System.out.println(i);
             for(var j : sinfo.get(i).getStationMap().keySet()){
-                System.out.print(j + ": VariableName " + sinfo.get(i).getStationMap().get(j).getVariableName());
-                System.out.print(", Start Date: "+sinfo.get(i).getStationMap().get(j).getStartDate());
-                System.out.print(", End Date: "+ sinfo.get(i).getStationMap().get(j).getEndDate());
-                System.out.println("");
+            System.out.print(j + ": VariableName " + sinfo.get(i).getStationMap().get(j).getGasValues().getVariableName());
+            System.out.print(", Start Date: "+sinfo.get(i).getStationMap().get(j).getGasValues().getStartDate());
+            System.out.print(", End Date: "+ sinfo.get(i).getStationMap().get(j).getGasValues().getEndDate());
+            System.out.println("");
+
             }
         }
-
     }*/
 
 }
