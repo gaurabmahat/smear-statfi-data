@@ -177,11 +177,6 @@ public class MainFXMLController implements Initializable {
         graphDataManager.addMainListener(mainListener);
     }
 
-    /**
-     * Initial data from SMEAR
-     */
-    public static final Map<String, Station> getInitialDataFromSmear = new SmearTimeAndVariableData().getSmearTimeData();
-
     @FXML
     private void handleT1DatePickerFrom(ActionEvent event) {
         fromDate = t1_datePicker_from.getValue();

@@ -26,6 +26,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import static fi.tuni.csgr.stationNames.stationNameMapping.mapStationAndGas;
 
@@ -34,7 +35,7 @@ import static fi.tuni.csgr.stationNames.stationNameMapping.mapStationAndGas;
  */
 
 public class SmearQuery implements Query {
-    private final Map<String, Station> initialDataFromSmear;
+    private static Map<String, Station> initialDataFromSmear;
 
     private DateSelector from;
     private DateSelector to;
@@ -52,7 +53,12 @@ public class SmearQuery implements Query {
      */
 
     protected SmearQuery() {
-        initialDataFromSmear = new SmearTimeAndVariableData().getSmearTimeData();
+        CompletableFuture<Void> smearTimeAndVariableData = CompletableFuture.runAsync(() -> {
+            System.out.println("Async starts");
+            initialDataFromSmear =  SmearTimeAndVariableData.smearMapData;
+            System.out.println("Async ends");
+        });
+
         graphDataManager = new GraphDataManager();
         resultConverter = new SmearJsonToResultConverter();
         // Create a resultView based on chartManager, which handles all resultView updates
@@ -111,7 +117,7 @@ public class SmearQuery implements Query {
     @Override
     public HttpRequest getHttpRequest() {
         //Get table variables from the class getTableVariable
-        String tableVariables = new getTableVariable(gas.getSelectedItems(), station.getSelectedItems()).getStationsCode();
+        String tableVariables = getStationsCode();
 
         LocalDateTime fromTime = getFromDate().atStartOfDay();
         LocalDateTime toTime = getToDate().atTime(23, 59);
@@ -157,4 +163,20 @@ public class SmearQuery implements Query {
     public ArrayList<ControlComponent> getControls() {
         return controlPanel.getControlComponents();
     }
+
+    private String getStationsCode() {
+        StringBuilder tableVariable = new StringBuilder("");
+        for (String gas : gas.getSelectedItems()) {
+            for(String station : station.getSelectedItems()){
+                String stationCode = initialDataFromSmear.get(station)
+                        .getStationMap()
+                        .get(gas)
+                        .getGasValues()
+                        .getVariableName();
+                tableVariable.append("&tablevariable=").append(stationCode);
+            }
+        }
+        return tableVariable.toString();
+    }
+
 }
