@@ -26,6 +26,11 @@
     -fx-padding: 0px 3px 10px 20px;
 }
 
+.query-source {
+    -fx-font-size: 1.3em;
+    -fx-font-weight: bold;
+}
+
 .please-select-text {
     -fx-text-fill: #686868;
 }
