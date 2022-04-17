@@ -13,6 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -23,7 +24,7 @@ import java.util.ResourceBundle;
 public class MainUIController implements Initializable {
 
     private QuerySingletonFactory queryFactory;
-    private Query currentQuery;
+    private ArrayList<Query> currentQuery;
     private QueryClient queryClient;
 
     private String defaultText = "COMP.SE.110 2022 Project work - By CSGR";
@@ -62,12 +63,23 @@ public class MainUIController implements Initializable {
     @FXML
     void handleQuerySelector(ActionEvent event) {
         controlsContainer.getChildren().clear();
-        currentQuery = queryFactory.getInstance(querySelector.getValue());
-        currentQuery.getControls().forEach(component ->
-                controlsContainer.getChildren().add(new ControlContainer(component)));
-        Pane resultView = currentQuery.getResultView();
-        resultView.prefWidthProperty().bind(Bindings.add(-38, viewPane.widthProperty()));
-        viewPane.setContent(resultView);
+        VBox resultsVBox = new VBox();
+        currentQuery.clear();
+        System.out.println(QueriesInfo.queryMap.get(querySelector.getValue()));
+        QueriesInfo.queryMap.get(querySelector.getValue()).forEach(query -> {
+            controlsContainer.getChildren().add(new Separator());
+            Text source = new Text(query.toUpperCase());
+            source.getStyleClass().add("query-source");
+            controlsContainer.getChildren().add(source);
+            Query newQuery = queryFactory.getInstance(query);
+            newQuery.getControls().forEach(component ->
+                    controlsContainer.getChildren().add(new ControlContainer(component)));
+            Pane resultView = newQuery.getResultView();
+            resultView.prefWidthProperty().bind(Bindings.add(-38, viewPane.widthProperty()));
+            currentQuery.add(newQuery);
+            resultsVBox.getChildren().add(resultView);
+        });
+        viewPane.setContent(resultsVBox);
     }
 
     @FXML
@@ -77,25 +89,28 @@ public class MainUIController implements Initializable {
 
     @FXML
     void handleShowBtn(ActionEvent event) {
-        boolean queryValid = true;
         ArrayList<String> missingValues = new ArrayList<>();
-        for (ControlComponent component : currentQuery.getControls()) {
-            if (!component.selectionValid()) {
-                queryValid = false;
-                missingValues.add(component.getLabel());
+        currentQuery.forEach(query -> {
+            boolean queryValid = true;
+            for (ControlComponent component : query.getControls()) {
+                if (!component.selectionValid()) {
+                    queryValid = false;
+                    missingValues.add(component.getLabel());
+                }
             }
-        }
-        if (queryValid) {
-            queryClient.performQuery(currentQuery);
+            if (queryValid) {
+                queryClient.performQuery(query);
 
-        }
-        else
-            showAlert("Please select " + String.join(", ", missingValues));
+            }
+            else
+                showAlert("Please select " + String.join(", ", missingValues));
+        });
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        querySelector.setItems(QueriesInfo.queryList);
+        currentQuery = new ArrayList<>();
+        querySelector.getItems().addAll(QueriesInfo.queryList);
         queryFactory = new QuerySingletonFactory();
         queryClient = new QueryClient();
         footerText.setText(defaultText);
