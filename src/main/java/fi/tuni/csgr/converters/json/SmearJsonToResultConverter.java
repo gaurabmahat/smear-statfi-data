@@ -33,7 +33,7 @@ public class SmearJsonToResultConverter implements JsonToResultConverter {
             SGResult newSGResult = new SGResult();
             for(Map dataSample: getData(jsonMap)){
                 Double value = (Double) dataSample.get(slug);
-                if (value != null) {
+                if (value != null && value != 0) {
                     LocalDateTime dateTime = LocalDateTime.
                             parse((CharSequence) dataSample.get("samptime"),
                                     DateTimeFormatter.ISO_LOCAL_DATE_TIME);
@@ -53,9 +53,6 @@ public class SmearJsonToResultConverter implements JsonToResultConverter {
         ResultList results = converter.convert(json);
         System.out.println(results.size());
         System.out.println(results.getSGResult("Kumpula", "CO2"));
-
     }
-
-
 }
 
