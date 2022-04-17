@@ -144,6 +144,11 @@ public class SmearTimeAndVariableData {
     private static TreeMap<LocalDate, Values> gasVariableNameAndTime(JsonArray jArray, String givenTitle_) {
         //TreeMap to store Date LocalDate of periodEnd, gas table variable name and periodStart, periodEnd values
         TreeMap<LocalDate, Values> gasVariable = new TreeMap<>();
+        //For Hyytiälä "CO₂ concentration" keyword does not give current values
+        if(givenTitle_.equals("CO₂ concentration") &&
+                jArray.get(0).getAsJsonObject().get("tableName").getAsString().equals("HYY_META")){
+            givenTitle_ = "CO₂";
+        }
 
         for (int i = 0; i < jArray.size(); i++) {
             JsonObject jObject = jArray.get(i).getAsJsonObject();
@@ -214,7 +219,7 @@ public class SmearTimeAndVariableData {
         return urlArray;
     }
 
-    /*public static void main(String[] args) {
+    public static void main(String[] args) {
         var sinfo =  SmearTimeAndVariableData.getSmearTimeData();
         for(var i : sinfo.keySet()){
             System.out.println(i);
@@ -226,6 +231,6 @@ public class SmearTimeAndVariableData {
 
             }
         }
-    }*/
+    }
 
 }
