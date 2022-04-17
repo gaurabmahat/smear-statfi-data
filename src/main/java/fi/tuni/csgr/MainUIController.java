@@ -65,7 +65,6 @@ public class MainUIController implements Initializable {
         controlsContainer.getChildren().clear();
         VBox resultsVBox = new VBox();
         currentQuery.clear();
-        System.out.println(QueriesInfo.queryMap.get(querySelector.getValue()));
         QueriesInfo.queryMap.get(querySelector.getValue()).forEach(query -> {
             controlsContainer.getChildren().add(new Separator());
             Text source = new Text(query.toUpperCase());
