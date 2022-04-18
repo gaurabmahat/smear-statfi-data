@@ -18,6 +18,14 @@ public class PredefinedStationsInfo {
             "NO", "NO concentration"
     );
 
+    public static final Map<String, String> aggregationType = Map.of(
+            "None", "NONE",
+            "Arithmetic", "ARITHMETIC",
+            "Min", "MIN",
+            "Max", "MAX",
+            "Average", "MEDIAN"
+    );
+
     public static final Map<String, String> statfiValues = Map.of(
             "CO2 tonnes", "Khk_yht",
             "CO2 intensity", "Khk_yht_las",

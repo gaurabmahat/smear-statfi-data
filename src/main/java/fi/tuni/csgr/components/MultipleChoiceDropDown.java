@@ -5,6 +5,10 @@ import javafx.scene.control.Control;
 
 import java.util.ArrayList;
 
+/**
+ * Component with multiple choice dropdown control
+ */
+
 public class MultipleChoiceDropDown implements ControlComponent {
     private CheckBoxMenu control;
     private String label;

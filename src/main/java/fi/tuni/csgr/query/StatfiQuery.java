@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.IntStream;
 
 /**
@@ -71,7 +72,7 @@ public class StatfiQuery implements  Query {
     }
 
     @Override
-    public void setSelectionData(HashMap<String, ArrayList<String>> data) {
+    public void setSelectionData(Map<String, ArrayList<String>> data) {
         controlPanel.setSelectionData(data);
     }
 
@@ -129,6 +130,11 @@ public class StatfiQuery implements  Query {
     @Override
     public ArrayList<ControlComponent> getControls() {
         return controlPanel.getControlComponents();
+    }
+
+    @Override
+    public String type(){
+        return "Statfi";
     }
 
     private String getStatfiPOSTString(){

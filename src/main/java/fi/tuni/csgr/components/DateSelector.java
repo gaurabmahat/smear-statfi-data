@@ -9,6 +9,10 @@ import java.util.ArrayList;
 
 import static fi.tuni.csgr.utils.DatePickerUtils.restrictDatePicker;
 
+/**
+ * Component with DatePicker control
+ */
+
 public class DateSelector implements ControlComponent {
     private boolean isMandatory;
     private String label;
@@ -52,7 +56,7 @@ public class DateSelector implements ControlComponent {
 
     @Override
     public void setSelectionData(ArrayList<String> data) {
-        LocalDate date = LocalDate.parse(data.get(0));
+        LocalDate date = LocalDate.parse(data.get(0), DateTimeFormatter.ISO_LOCAL_DATE);
         control.setValue(date);
     }
 

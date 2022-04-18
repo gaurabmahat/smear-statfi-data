@@ -11,6 +11,11 @@
 .btn-main:hover {
     -fx-background-color: green;
     -fx-text-fill: white;
+    -fx-cursor: hand;
+}
+
+.btn-secondary:hover {
+    -fx-cursor: hand;
 }
 
 .btn-clicked {
@@ -24,6 +29,11 @@
 
 .control-component {
     -fx-padding: 0px 3px 10px 20px;
+}
+
+.query-source {
+    -fx-font-size: 1.3em;
+    -fx-font-weight: bold;
 }
 
 .please-select-text {

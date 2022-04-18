@@ -1,6 +1,7 @@
 package fi.tuni.csgr.managers.graphs;
 
 import fi.tuni.csgr.converters.json.ResultList;
+import fi.tuni.csgr.utils.Aggregates;
 import javafx.collections.*;
 import javafx.scene.chart.XYChart;
 
@@ -19,6 +20,7 @@ public class GraphDataManager {
     public GraphDataManager(){
         this.gases = FXCollections.observableMap(new HashMap<>());
     }
+
 
     /**
      * updates the stored data with fetched results
@@ -81,7 +83,7 @@ public class GraphDataManager {
         return allGasSeries.get(i);
     }
 
-    private void updateGasStationResults(ResultList resultList, String station, String gas){
+    public List<XYChart.Data<Long, Double>> updateGasStationResults(ResultList resultList, String station, String gas){
         ArrayList<XYChart.Data<Long, Double>> data = getXYChartDataList(
                 resultList.getSGResult(station, gas).getData()
         );
@@ -89,6 +91,17 @@ public class GraphDataManager {
         ObservableList<XYChart.Data<Long, Double>> seriesData = stationSeries.getData();
         seriesData.clear();
         seriesData.addAll(data);
+        //System.out.println(seriesData);
+        if(seriesData.isEmpty()){
+            System.out.println("The aggregates cannot be displayed as the data in the series is empty");
+        }
+        else {
+            Aggregates agg = new Aggregates();
+            agg.findMaximum(seriesData);
+            agg.findMinimum(seriesData);
+            agg.findAverage(seriesData);
+        }
+        return seriesData;
     }
 
     private void removeOldGases(List<String> gasesToRemove){
