@@ -6,11 +6,11 @@ import fi.tuni.csgr.converters.json.ResultList;
 import fi.tuni.csgr.converters.json.StatfiJsonToResultConverter;
 import fi.tuni.csgr.components.ControlPanel;
 import fi.tuni.csgr.query.resultviews.ResultView;
-import fi.tuni.csgr.query.resultviews.SmearResultsView;
 import fi.tuni.csgr.managers.graphs.GraphDataManager;
-import fi.tuni.csgr.smearAndStatfi.SMEAR.timeAndVariablesFromSmear.PredefinedStationsInfo;
+import fi.tuni.csgr.query.resultviews.StatfiResultsView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
 
 import java.net.URI;
@@ -32,6 +32,7 @@ public class StatfiQuery implements  Query {
     private YearSelector years;
     private MultipleChoiceDropDown gas;
     private ControlPanel controlPanel;
+    private ToggleGroup toggleGroup;
 
     private JsonToResultConverter resultConverter;
     private GraphDataManager graphDataManager;
@@ -45,19 +46,14 @@ public class StatfiQuery implements  Query {
         graphDataManager = new GraphDataManager();
         resultConverter = new StatfiJsonToResultConverter();
         // Create a resultView based on chartManager, which handles all resultView updates
-        resultView = new SmearResultsView(graphDataManager);
-
-
-        // TO DO: Need a map to connect these to variables for http query
-        ObservableList<String> gasList = FXCollections.observableArrayList("CO2 tonnes", "CO2 intensity", "CO2 indexed", "CO2 indexed intensity");
+        resultView = new StatfiResultsView(graphDataManager);
 
         // Create UI components and add to list of components
         years = new YearSelector(1990, 2016, "Years", true);
-        gas = new MultipleChoiceDropDown(gasList, "Gas", true);
 
         controlPanel = new ControlPanel();
         controlPanel.addControl("years", years);
-        controlPanel.addControl("Statfi gas", gas);
+
     }
 
     @Override
@@ -86,14 +82,16 @@ public class StatfiQuery implements  Query {
      */
     @Override
     public HttpRequest getHttpRequest() {
+
         try {
             URI uri = new URI("https://pxnet2.stat.fi/PXWeb/api/v1/en/ymp/taulukot/Kokodata.px");
-            var postString = getStatfiPOSTString();
+            String postString = getStatfiPOSTString();
 
             HttpRequest request = HttpRequest.newBuilder(uri)
                     .POST(HttpRequest.BodyPublishers.ofString(postString))
                     .header("Content-type", "application/json")
                     .build();
+
             return request;
         } catch (URISyntaxException e) {
             e.printStackTrace();
@@ -140,27 +138,13 @@ public class StatfiQuery implements  Query {
     }
 
     private String getStatfiPOSTString(){
-        var getTiedot = gas.getSelectedItems();
-        List<String> tiedotList = new ArrayList<>();
-
-        for(var i : getTiedot){
-            tiedotList.add(PredefinedStationsInfo.statfiValues.get(i));
-        }
-
         List<Integer> vuosiList = new ArrayList<>();
         IntStream
                 .range(years.getFromDate(), years.getToDate())
                 .forEach(vuosiList::add);
         vuosiList.add(years.getToDate());
 
-        String tiedotValues = "";
         String vuosiValues = "";
-        //Convert tiedot List to String
-        for(int i = 0; i < tiedotList.size()-1; i++){
-            tiedotValues += "\"" + tiedotList.get(i) + "\", ";
-        }
-        tiedotValues += "\"" + tiedotList.get(tiedotList.size()-1) + "\"";
-
         //Convert vuosi List to String
         for(int i = 0; i < vuosiList.size()-1; i++){
             vuosiValues += "\"" + vuosiList.get(i) + "\", ";
@@ -173,7 +157,12 @@ public class StatfiQuery implements  Query {
                 "                \"code\": \"Tiedot\",\n" +
                 "                \"selection\": {\n" +
                 "                    \"filter\": \"item\",\n" +
-                "                    \"values\": ["+ tiedotValues + "]\n" +
+                "                    \"values\": ["+
+            "                           \"Khk_yht\",\n" +
+            "                           \"Khk_yht_index\",\n" +
+            "                           \"Khk_yht_las\",\n" +
+            "                           \"Khk_yht_las_index\"\n"  +
+                "                   ]\n" +
                 "                }\n" +
                 "            },\n" +
                 "            {\n" +
@@ -188,4 +177,26 @@ public class StatfiQuery implements  Query {
 
         return statfiPOSTString;
     }
+
+    /*
+    "{\n" +
+                    "        \"query\": [\n" +
+                    "            {\n" +
+                    "                \"code\": \"Tiedot\",\n" +
+                    "                \"selection\": {\n" +
+                    "                    \"filter\": \"item\",\n" +
+                    "                    \"values\": [" +
+                    "                       \"Khk_yht\",\n" +
+                            "                \"Khk_yht_index\",\n" +
+                            "                \"Khk_yht_las\",\n" +
+                            "                \"Khk_yht_las_index\"\n" +
+                    "                   ]\n" +
+                    "                }\n" +
+                    "            }\n" +
+                    "        ],\n" +
+                    "       \"response\": {" +
+                    "           \"format\": \"json-stat2\"" +
+                    "       }\n" +
+                    "    }\n";
+     */
 }
