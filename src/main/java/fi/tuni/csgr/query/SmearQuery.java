@@ -11,7 +11,6 @@ import fi.tuni.csgr.components.ControlPanel;
 import fi.tuni.csgr.query.resultviews.ResultView;
 import fi.tuni.csgr.query.resultviews.SmearResultsView;
 import fi.tuni.csgr.managers.graphs.GraphDataManager;
-import fi.tuni.csgr.smearAndStatfi.SMEAR.fetchSeriesDataFromSmear.getTableVariable;
 import fi.tuni.csgr.smearAndStatfi.SMEAR.timeAndVariablesFromSmear.SmearTimeAndVariableData;
 import fi.tuni.csgr.stationNames.Station;
 import fi.tuni.csgr.utils.DatePickerUtils;
@@ -32,8 +31,6 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import static fi.tuni.csgr.smearAndStatfi.SMEAR.timeAndVariablesFromSmear.PredefinedStationsInfo.*;
-import static fi.tuni.csgr.stationNames.stationNameMapping.mapStationAndGas;
-import static fi.tuni.csgr.utils.DatePickerUtils.restrictDatePicker;
 
 /**
  * A query containing all data specific to a SMEAR query.
