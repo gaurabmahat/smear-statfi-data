@@ -87,7 +87,7 @@ public class GraphDataManager {
         ObservableList<XYChart.Data<Long, Double>> seriesData = stationSeries.getData();
         seriesData.clear();
         seriesData.addAll(data);
-        System.out.println(seriesData);
+        //System.out.println(seriesData);
         if(seriesData.isEmpty()){
             System.out.println("The aggregates cannot be displayed as the data in the series is empty");
         }
