@@ -6,7 +6,9 @@ import fi.tuni.csgr.utils.SelectionData;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Map;
 
 public class UserDataManager {
 
@@ -17,15 +19,15 @@ public class UserDataManager {
         userDataLocation = Path.of(dirPath).resolve("user_data");
     }
 
-    public void saveSelection(String source, SelectionData selectionData) throws ErrorWritingUserDataException {
-        writeToFile(source, gson.toJson(selectionData));
+    public void saveSelection(String source, Map<String, ArrayList<String>> selection) throws ErrorWritingUserDataException {
+        writeToFile(source, gson.toJson(selection));
     }
 
-    public SelectionData readSelection(String source) throws ErrorReadingUserDataException, FileNotFoundException {
+    public Map<String, ArrayList<String>> readSelection(String source) throws ErrorReadingUserDataException, FileNotFoundException {
         return readFromFile(source);
     }
 
-    private static SelectionData readFromFile(String source) throws FileNotFoundException, ErrorReadingUserDataException {
+    private static Map<String, ArrayList<String>> readFromFile(String source) throws FileNotFoundException, ErrorReadingUserDataException {
         Path userDataFilePath = userDataLocation.resolve(String.format("%s.json", source));
         if (!Files.exists(userDataFilePath)){
             System.out.println("file not found");
@@ -33,7 +35,7 @@ public class UserDataManager {
         }
         try {
             String content = Files.readAllLines(userDataFilePath).get(0);
-            return gson.fromJson(content, SelectionData.class);
+            return gson.fromJson(content, Map.class);
         } catch (IOException e) {
             System.out.println("reading");
             throw new ErrorReadingUserDataException();

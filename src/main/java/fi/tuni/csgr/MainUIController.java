@@ -2,6 +2,9 @@ package fi.tuni.csgr;
 
 import fi.tuni.csgr.components.ControlComponent;
 import fi.tuni.csgr.components.ControlContainer;
+import fi.tuni.csgr.managers.userdata.ErrorReadingUserDataException;
+import fi.tuni.csgr.managers.userdata.ErrorWritingUserDataException;
+import fi.tuni.csgr.managers.userdata.UserDataManager;
 import fi.tuni.csgr.network.QueryClient;
 import fi.tuni.csgr.query.QueriesInfo;
 import fi.tuni.csgr.query.Query;
@@ -18,8 +21,11 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class MainUIController implements Initializable {
@@ -27,6 +33,7 @@ public class MainUIController implements Initializable {
     private QuerySingletonFactory queryFactory;
     private ArrayList<Query> currentQuery;
     private QueryClient queryClient;
+    private UserDataManager userDataManager = new UserDataManager(System.getProperty("user.dir"));
 
     private String defaultText = "COMP.SE.110 2022 Project work - By CSGR";
 
@@ -58,6 +65,14 @@ public class MainUIController implements Initializable {
 
     @FXML
     private void handleLoad(ActionEvent event) {
+        try {
+            Map<String, ArrayList<String>> loadedSelection = userDataManager.readSelection(querySelector.getValue());
+            currentQuery.forEach(query -> query.setSelectionData(loadedSelection));
+        } catch (ErrorReadingUserDataException e) {
+            Alerts.showInformationAlert("Error reading the saved data");
+        } catch (FileNotFoundException e) {
+            Alerts.showInformationAlert("No file with saved data found");
+        }
 
     }
 
@@ -100,8 +115,30 @@ public class MainUIController implements Initializable {
 
 
     @FXML
-    private void handleSave(ActionEvent event) {
-
+    private void handleSave() {
+        ArrayList<String> missingValues = new ArrayList<>();
+        currentQuery.forEach(query -> {
+            boolean queryValid = true;
+            for (ControlComponent component : query.getControls()) {
+                if (!component.selectionValid()) {
+                    queryValid = false;
+                    missingValues.add(component.getLabel());
+                }
+            }
+            if (queryValid) {
+                HashMap<String, ArrayList<String>> allSelections = new HashMap<>();
+                currentQuery.forEach(q -> allSelections.putAll(q.getSelectionData()));
+                try {
+                    userDataManager.saveSelection(querySelector.getValue(), allSelections);
+                    Alerts.showInformationAlert("Selection saved!");
+                } catch (ErrorWritingUserDataException e) {
+                    Alerts.showInformationAlert("Problem saving selection");
+                }
+            }
+            else
+                Alerts.showInformationAlert("Please select " + String.join(", ", missingValues));
+            return;
+        });
     }
 
     @FXML

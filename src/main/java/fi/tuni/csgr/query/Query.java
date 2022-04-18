@@ -7,7 +7,7 @@ import javafx.scene.layout.Pane;
 import java.net.http.HttpRequest;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Interface for creating Queries. The query object keeps track of everything related to a specific query:
@@ -20,8 +20,9 @@ import java.util.HashMap;
 public interface Query {
     LocalDate getFromDate();
     LocalDate getToDate();
-    HashMap<String, ArrayList<String>> getSelectionData();
-    void setSelectionData(HashMap<String, ArrayList<String>> data);
+    Map<String, ArrayList<String>> getSelectionData();
+    void setSelectionData(Map<String, ArrayList<String>> data);
+    String type();
 
     HttpRequest getHttpRequest();
     ResultList JsonToResult(String json);

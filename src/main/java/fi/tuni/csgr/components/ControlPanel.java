@@ -5,6 +5,7 @@ import fi.tuni.csgr.components.ControlComponent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Class to hold all ControlComponents related to a specific search, with functionality
@@ -52,9 +53,11 @@ public class ControlPanel {
      *
      * @param data maps name of component to list of all selections in component
      */
-    public void setSelectionData(HashMap<String, ArrayList<String>> data) {
-        data.keySet().forEach(key -> {
-            controls.get(key).setSelectionData(data.get(key));
-        });
+    public void setSelectionData(Map<String, ArrayList<String>> data) {
+        for (Map.Entry<String, ControlComponent> controlEntry: controls.entrySet()){
+            String controlId = controlEntry.getKey();
+            ControlComponent component = controlEntry.getValue();
+            component.setSelectionData(data.get(controlId));
+        }
     }
 }

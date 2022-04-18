@@ -114,7 +114,7 @@ public class SmearQuery implements Query {
     }
 
     @Override
-    public void setSelectionData(HashMap<String, ArrayList<String>> data) {
+    public void setSelectionData(Map<String, ArrayList<String>> data) {
         controlPanel.setSelectionData(data);
     }
 
@@ -171,6 +171,11 @@ public class SmearQuery implements Query {
     @Override
     public ArrayList<ControlComponent> getControls() {
         return controlPanel.getControlComponents();
+    }
+
+    @Override
+    public String type(){
+        return "Smear";
     }
 
     private String getStationsCode() {
