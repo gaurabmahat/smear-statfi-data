@@ -26,7 +26,7 @@ public class SmearTimeAndVariableData {
     /**
      * This method can be used to get the station id from SMEAR based on the given station name.
      * Ex: {Kumpula=3, Värriö=1, Hyytiälä=2}.
-     * This method checks if the station name exists in the class predefinedStationsInfo.
+     * This method checks if the station name exists in the class PredefinedStationsInfo.
      * It also calls two inner methods getSmearJsonArray and getTableVariableIdOfAStation
      */
     private static Map<String, Station> getSmearTimeData() {
@@ -219,7 +219,7 @@ public class SmearTimeAndVariableData {
         return urlArray;
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         var sinfo =  SmearTimeAndVariableData.getSmearTimeData();
         for(var i : sinfo.keySet()){
             System.out.println(i);
@@ -231,6 +231,6 @@ public class SmearTimeAndVariableData {
 
             }
         }
-    }
+    }*/
 
 }

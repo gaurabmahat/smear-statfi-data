@@ -46,6 +46,10 @@ public class GraphDataManager {
         }
     }
 
+    public ObservableMap<String, ObservableList<XYChart.Series<Long, Double>>> getGases() {
+        return gases;
+    }
+
     /**
      * adds listener to the main map storing all result gases
      * @param listener
