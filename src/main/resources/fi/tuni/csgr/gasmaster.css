@@ -11,6 +11,11 @@
 .btn-main:hover {
     -fx-background-color: green;
     -fx-text-fill: white;
+    -fx-cursor: hand;
+}
+
+.btn-secondary:hover {
+    -fx-cursor: hand;
 }
 
 .btn-clicked {
