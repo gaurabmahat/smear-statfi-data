@@ -10,6 +10,11 @@ import javafx.scene.layout.VBox;
 
 import java.util.HashMap;
 
+/**
+ * Class handling the view of Smear results. Creates a resultView that can be added to the screen
+ * to display query results.
+ */
+
 public class SmearResultsView implements ResultView {
     private GraphDataManager graphDataManager;
     private HashMap<String, ChartView> charts;

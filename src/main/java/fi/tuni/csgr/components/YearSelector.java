@@ -1,9 +1,12 @@
 package fi.tuni.csgr.components;
 
 import javafx.scene.control.Control;
-import javafx.scene.control.MenuButton;
 
 import java.util.ArrayList;
+
+/**
+ * Component with YearPicker control
+ */
 
 public class YearSelector implements ControlComponent {
 

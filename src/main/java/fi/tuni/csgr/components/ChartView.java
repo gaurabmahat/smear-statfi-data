@@ -34,12 +34,13 @@ public class ChartView {
 
         StackPane stackPane = new StackPane();
 
+        // Create title text
         this.title = title;
-
         Text titleText = new Text(title);
         titleText.getStyleClass().add("graph-title");
         chartBox.getChildren().add(titleText);
 
+        // Create x and y axis for graph
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
 
@@ -48,8 +49,9 @@ public class ChartView {
 
         xAxis.setAutoRanging(true);
         xAxis.setForceZeroInRange(false);
-        xAxis.setTickLabelFormatter(new StringConverter<Number>() {
 
+        // Set text format of xAxis
+        xAxis.setTickLabelFormatter(new StringConverter<Number>() {
             @Override
             public String toString(Number t) {
                 LocalDateTime dateTime =
@@ -64,11 +66,11 @@ public class ChartView {
             }
         });
 
+        // Create LineChart
         chart = new LineChart(xAxis, yAxis, seriesList);
         chart.setAnimated(false);
         chart.setCreateSymbols(false);
         stackPane.getChildren().add(chart);
-
         chartBox.getChildren().add(stackPane);
     }
 

@@ -13,7 +13,6 @@ import fi.tuni.csgr.query.resultviews.SmearResultsView;
 import fi.tuni.csgr.managers.graphs.GraphDataManager;
 import fi.tuni.csgr.smearAndStatfi.SMEAR.timeAndVariablesFromSmear.SmearTimeAndVariableData;
 import fi.tuni.csgr.stationNames.Station;
-import fi.tuni.csgr.utils.DatePickerUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.DatePicker;
@@ -86,12 +85,15 @@ public class SmearQuery implements Query {
         controlPanel.addControl("station", station);
         controlPanel.addControl("value", value);
 
+        // TO DO: These values should be retrieved from initialDataFromSmear
+        from.limitDatePicker(LocalDate.of(2000, Month.JANUARY, 1), LocalDate.now());
+        to.limitDatePicker(LocalDate.of(2000, Month.JANUARY, 1), LocalDate.now());
+
+        // Add listener to fromPicker to limit lower range of toPicker
         DatePicker fromPicker = (DatePicker)from.getControl();
         DatePicker toPicker = (DatePicker)to.getControl();
-        DatePickerUtils.restrictDatePicker(fromPicker,LocalDate.of(2000, Month.JANUARY, 1), LocalDate.now());
-        DatePickerUtils.restrictDatePicker(fromPicker,LocalDate.of(2000, Month.JANUARY, 1), LocalDate.now());
         fromPicker.valueProperty().addListener((observable, oldDate, newDate) -> {
-            DatePickerUtils.restrictDatePicker(toPicker, newDate, LocalDate.now());
+            to.limitDatePicker(newDate, LocalDate.now());
             if (toPicker.getValue().isBefore(newDate)) {
                 toPicker.setValue(newDate);
             }

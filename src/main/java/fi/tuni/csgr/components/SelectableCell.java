@@ -3,6 +3,10 @@ package fi.tuni.csgr.components;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 
+/**
+ * Cell to be used in yearpicker dropdown grid, with functionality to select/deselect cell.
+ */
+
 public class SelectableCell extends StackPane{
     private int value;
 
