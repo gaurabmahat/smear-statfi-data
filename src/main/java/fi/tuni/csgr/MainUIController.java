@@ -6,6 +6,7 @@ import fi.tuni.csgr.network.QueryClient;
 import fi.tuni.csgr.query.QueriesInfo;
 import fi.tuni.csgr.query.Query;
 import fi.tuni.csgr.query.QuerySingletonFactory;
+import fi.tuni.csgr.utils.Alerts;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -45,49 +46,66 @@ public class MainUIController implements Initializable {
     private ScrollPane viewPane;
 
     @FXML
-    void exitApp(ActionEvent event) {
+    private void exitApp(ActionEvent event) {
         Stage stage = (Stage) viewPane.getScene().getWindow();
         stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
     }
 
     @FXML
-    void handleAboutMenu(ActionEvent event) {
+    private void handleAboutMenu(ActionEvent event) {
 
     }
 
     @FXML
-    void handleLoad(ActionEvent event) {
+    private void handleLoad(ActionEvent event) {
 
     }
 
     @FXML
-    void handleQuerySelector(ActionEvent event) {
+    private void handleQuerySelector(ActionEvent event) {
+        ArrayList<String> queries = QueriesInfo.queryMap.get(querySelector.getValue());
+        setQueries(queries);
+    }
+
+    /**
+     * Fetches Query objects and adds controls and results for each query to the view.
+     *
+     * @param queries List of all included subqueries
+     */
+    private void setQueries(ArrayList<String> queries) {
         controlsContainer.getChildren().clear();
         VBox resultsVBox = new VBox();
         currentQuery.clear();
-        QueriesInfo.queryMap.get(querySelector.getValue()).forEach(query -> {
+        queries.forEach(query -> {
+            // Get query instance from factory
+            Query newQuery = queryFactory.getInstance(query);
+            currentQuery.add(newQuery);
+
+            // Add query controls
             controlsContainer.getChildren().add(new Separator());
             Text source = new Text(query.toUpperCase());
             source.getStyleClass().add("query-source");
             controlsContainer.getChildren().add(source);
-            Query newQuery = queryFactory.getInstance(query);
             newQuery.getControls().forEach(component ->
                     controlsContainer.getChildren().add(new ControlContainer(component)));
+
+            // Add query results to results view
             Pane resultView = newQuery.getResultView();
             resultView.prefWidthProperty().bind(Bindings.add(-38, viewPane.widthProperty()));
-            currentQuery.add(newQuery);
             resultsVBox.getChildren().add(resultView);
         });
         viewPane.setContent(resultsVBox);
     }
 
+
+
     @FXML
-    void handleSave(ActionEvent event) {
+    private void handleSave(ActionEvent event) {
 
     }
 
     @FXML
-    void handleShowBtn(ActionEvent event) {
+    private void handleShowBtn(ActionEvent event) {
         ArrayList<String> missingValues = new ArrayList<>();
         currentQuery.forEach(query -> {
             boolean queryValid = true;
@@ -102,7 +120,8 @@ public class MainUIController implements Initializable {
 
             }
             else
-                showAlert("Please select " + String.join(", ", missingValues));
+                Alerts.showInformationAlert("Please select " + String.join(", ", missingValues));
+                return;
         });
     }
 
@@ -113,14 +132,5 @@ public class MainUIController implements Initializable {
         queryFactory = new QuerySingletonFactory();
         queryClient = new QueryClient();
         footerText.setText(defaultText);
-    }
-
-    public void showAlert(String msg) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("");
-        alert.setHeaderText(null);
-        alert.setContentText(msg);
-
-        alert.showAndWait();
     }
 }
