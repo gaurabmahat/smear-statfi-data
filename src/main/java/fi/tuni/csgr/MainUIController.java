@@ -34,7 +34,6 @@ public class MainUIController implements Initializable {
     private ArrayList<Query> currentQuery;
     private QueryClient queryClient;
     private UserDataManager userDataManager = new UserDataManager(System.getProperty("user.dir"));
-
     private String defaultText = "COMP.SE.110 2022 Project work - By CSGR";
 
     @FXML
@@ -73,7 +72,6 @@ public class MainUIController implements Initializable {
         } catch (FileNotFoundException e) {
             Alerts.showInformationAlert("No file with saved data found");
         }
-
     }
 
     @FXML
@@ -111,7 +109,6 @@ public class MainUIController implements Initializable {
         });
         viewPane.setContent(resultsVBox);
     }
-
 
 
     @FXML
@@ -169,5 +166,6 @@ public class MainUIController implements Initializable {
         queryFactory = new QuerySingletonFactory();
         queryClient = new QueryClient();
         footerText.setText(defaultText);
+        userDataManager = new UserDataManager(System.getProperty("user.dir"));
     }
 }
