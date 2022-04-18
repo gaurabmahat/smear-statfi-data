@@ -60,10 +60,18 @@ public class CheckBoxMenu extends MenuButton {
         }
     }
 
+    /**
+     * Clear all selections in menu
+     */
     public void clearSelections() {
         checkBoxes.values().forEach(cb -> cb.setSelected(false));
     }
 
+    /**
+     * Set one selected item
+     * @param item to set
+     * @return false if item not found
+     */
     public boolean setSelected(String item) {
         CheckBox cb = checkBoxes.get(item);
         if (cb == null) {
@@ -73,6 +81,10 @@ public class CheckBoxMenu extends MenuButton {
         return true;
     }
 
+    /**
+     * Get list of selected items
+     * @return ArrayList of selected items
+     */
     public ArrayList<String> getSelectedItems() {
         return selectedItems;
     }

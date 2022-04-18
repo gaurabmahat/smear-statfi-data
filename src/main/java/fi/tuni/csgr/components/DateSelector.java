@@ -9,6 +9,10 @@ import java.util.ArrayList;
 
 import static fi.tuni.csgr.utils.DatePickerUtils.restrictDatePicker;
 
+/**
+ * Component with DatePicker control
+ */
+
 public class DateSelector implements ControlComponent {
     private boolean isMandatory;
     private String label;
