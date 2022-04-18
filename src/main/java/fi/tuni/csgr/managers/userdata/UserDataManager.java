@@ -1,7 +1,6 @@
 package fi.tuni.csgr.managers.userdata;
 
 import com.google.gson.Gson;
-import fi.tuni.csgr.utils.SelectionData;
 
 import java.io.*;
 import java.nio.file.Files;

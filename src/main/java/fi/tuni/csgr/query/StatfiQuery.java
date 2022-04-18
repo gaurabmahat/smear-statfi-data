@@ -57,7 +57,7 @@ public class StatfiQuery implements  Query {
 
         controlPanel = new ControlPanel();
         controlPanel.addControl("years", years);
-        controlPanel.addControl("gas", gas);
+        controlPanel.addControl("Statfi gas", gas);
     }
 
     @Override
