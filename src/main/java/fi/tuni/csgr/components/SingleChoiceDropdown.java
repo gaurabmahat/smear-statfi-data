@@ -47,7 +47,8 @@ public class SingleChoiceDropdown implements ControlComponent {
     @Override
     public ArrayList<String> getSelectionData() {
         ArrayList<String> data = new ArrayList<>();
-        data.add(control.getSelectionModel().toString());
+        //data.add(control.getSelectionModel().toString());
+        data.add(getSelection());
         return data;
     }
 
