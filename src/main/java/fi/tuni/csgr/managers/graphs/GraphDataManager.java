@@ -87,10 +87,16 @@ public class GraphDataManager {
         ObservableList<XYChart.Data<Long, Double>> seriesData = stationSeries.getData();
         seriesData.clear();
         seriesData.addAll(data);
-        Aggregates agg = new Aggregates();
-        agg.findMaximum(seriesData);
-        agg.findMinimum(seriesData);
-        agg.findAverage(seriesData);
+        System.out.println(seriesData);
+        if(seriesData.isEmpty()){
+            System.out.println("The aggregates cannot be displayed as the data in the series is empty");
+        }
+        else {
+            Aggregates agg = new Aggregates();
+            agg.findMaximum(seriesData);
+            agg.findMinimum(seriesData);
+            agg.findAverage(seriesData);
+        }
         return seriesData;
     }
 
