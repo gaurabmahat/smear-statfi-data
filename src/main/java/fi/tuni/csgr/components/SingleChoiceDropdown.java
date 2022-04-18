@@ -6,6 +6,10 @@ import javafx.scene.control.Control;
 
 import java.util.ArrayList;
 
+/**
+ * Component with single choice dropdown control
+ */
+
 public class SingleChoiceDropdown implements ControlComponent {
     private ComboBox control;
     private String label;
