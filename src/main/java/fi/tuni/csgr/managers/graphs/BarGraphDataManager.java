@@ -1,23 +1,18 @@
 package fi.tuni.csgr.managers.graphs;
 
 import fi.tuni.csgr.converters.json.ResultList;
-import fi.tuni.csgr.utils.Aggregates;
 import javafx.collections.*;
 import javafx.scene.chart.XYChart;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-/**
- * Class for managing all data displayed on graphs
- *
- * @author Cecylia Borek
- */
+public class BarGraphDataManager {
+    ObservableMap<String, ObservableList<XYChart.Series<String, Double>>> gases;
 
-public class GraphDataManager {
-
-    ObservableMap<String, ObservableList<XYChart.Series<Long, Double>>> gases;
-
-    public GraphDataManager(){
+    public BarGraphDataManager(){
         this.gases = FXCollections.observableMap(new HashMap<>());
     }
 
@@ -48,6 +43,10 @@ public class GraphDataManager {
         }
     }
 
+    public ObservableMap<String, ObservableList<XYChart.Series<String, Double>>> getGases() {
+        return gases;
+    }
+
     /**
      * adds listener to the main map storing all result gases
      * @param listener
@@ -66,12 +65,12 @@ public class GraphDataManager {
     }
 
     private List<String> getStoredStationNamesForGas(String gas){
-        List<XYChart.Series<Long, Double>> stationSeries = gases.get(gas);
+        List<XYChart.Series<String, Double>> stationSeries = gases.get(gas);
         return stationSeries.stream().map(s -> s.getName()).toList();
     }
 
-    private XYChart.Series<Long, Double> getGasStationSeries(String gas, String station){
-        List<XYChart.Series<Long, Double>> allGasSeries = gases.get(gas);
+    private XYChart.Series<String, Double> getGasStationSeries(String gas, String station){
+        List<XYChart.Series<String, Double>> allGasSeries = gases.get(gas);
         int i = 0;
         while (! allGasSeries.get(i).getName().equals(station)){
             i++;
@@ -79,24 +78,15 @@ public class GraphDataManager {
         return allGasSeries.get(i);
     }
 
-    public List<XYChart.Data<Long, Double>> updateGasStationResults(ResultList resultList, String station, String gas){
-        ArrayList<XYChart.Data<Long, Double>> data = getXYChartDataList(
+    public List<XYChart.Data<String, Double>> updateGasStationResults(ResultList resultList, String station, String gas){
+        ArrayList<XYChart.Data<String, Double>> data = getXYChartDataList(
                 resultList.getSGResult(station, gas).getData()
         );
-        XYChart.Series<Long, Double> stationSeries = getGasStationSeries(gas, station);
-        ObservableList<XYChart.Data<Long, Double>> seriesData = stationSeries.getData();
+        XYChart.Series<String, Double> stationSeries = getGasStationSeries(gas, station);
+        ObservableList<XYChart.Data<String, Double>> seriesData = stationSeries.getData();
         seriesData.clear();
         seriesData.addAll(data);
-        //System.out.println(seriesData);
-        if(seriesData.isEmpty()){
-            System.out.println("The aggregates cannot be displayed as the data in the series is empty");
-        }
-        else {
-            Aggregates agg = new Aggregates();
-            agg.findMaximum(seriesData);
-            agg.findMinimum(seriesData);
-            agg.findAverage(seriesData);
-        }
+
         return seriesData;
     }
 
@@ -113,10 +103,10 @@ public class GraphDataManager {
     }
 
     private void addNewStationsForGas(String gas, List<String> stations){
-        List<XYChart.Series<Long, Double>> gasStations = gases.get(gas);
+        List<XYChart.Series<String, Double>> gasStations = gases.get(gas);
         for (String station: stations){
 
-            XYChart.Series<Long, Double> stationSeries = new XYChart.Series<>(
+            XYChart.Series<String, Double> stationSeries = new XYChart.Series<>(
                     station,
                     FXCollections.observableArrayList(new ArrayList<>())
             );
@@ -126,7 +116,7 @@ public class GraphDataManager {
     }
 
     private void removeOldStationsForGas(String gas, List<String> stations){
-        List<XYChart.Series<Long, Double>> gasStations = gases.get(gas);
+        List<XYChart.Series<String, Double>> gasStations = gases.get(gas);
         for(String station: stations){
             gasStations.removeIf(series -> series.getName().equals(station));
         }
@@ -140,11 +130,11 @@ public class GraphDataManager {
         return new DiffResult(toAdd, toRemove);
     }
 
-    private ArrayList<XYChart.Data<Long, Double>> getXYChartDataList(Map<Long, Double> data){
-        ArrayList<XYChart.Data<Long, Double>> xyChartData = new ArrayList<>();
+    private ArrayList<XYChart.Data<String, Double>> getXYChartDataList(Map<Long, Double> data){
+        ArrayList<XYChart.Data<String, Double>> xyChartData = new ArrayList<>();
         for(Map.Entry<Long, Double> dataEntry: data.entrySet()){
-            XYChart.Data<Long, Double> xy = new XYChart.Data(
-                    dataEntry.getKey(),
+            XYChart.Data<String, Double> xy = new XYChart.Data(
+                    Long.toString(dataEntry.getKey()),
                     dataEntry.getValue());
             xyChartData.add(xy);
         }
