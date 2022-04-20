@@ -15,10 +15,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpRequest;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.IntStream;
 
 /**
@@ -118,6 +115,12 @@ public class StatfiQuery implements  Query {
     @Override
     public void updateGraphs(ResultList results) {
         graphDataManager.update(results);
+        //Sorting the XYCharts.Series
+        for(var key : graphDataManager.getGases().keySet()){
+            for(int i = 0; i < graphDataManager.getGases().get(key).get(0).getData().size(); i++){
+                graphDataManager.getGases().get(key).get(0).getData().sort(Comparator.comparingInt(e -> Integer.parseInt(e.getXValue())));
+            }
+        }
     }
 
     /**

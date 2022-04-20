@@ -43,7 +43,7 @@ public class BarChartView implements ChartView {
         xAxis.setAutoRanging(true);
         //xAxis.setForceZeroInRange(false);
 
-        // Create LineChart
+        // Create BarChart
         chart = new BarChart(xAxis, yAxis, seriesList);
         chart.setAnimated(false);
         //chart.setCreateSymbols(false);
