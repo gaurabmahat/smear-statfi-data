@@ -5,7 +5,6 @@ import fi.tuni.csgr.converters.json.ResultList;
 import javafx.scene.layout.Pane;
 
 import java.net.http.HttpRequest;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -18,15 +17,13 @@ import java.util.Map;
  */
 
 public interface Query {
-    LocalDate getFromDate();
-    LocalDate getToDate();
     Map<String, ArrayList<String>> getSelectionData();
     void setSelectionData(Map<String, ArrayList<String>> data);
     String type();
 
     HttpRequest getHttpRequest();
-    ResultList JsonToResult(String json);
-    void updateGraphs(ResultList results);
+    ResultList jsonToResult(String json);
+    void updateResults(ResultList results);
 
     Pane getResultView();
 

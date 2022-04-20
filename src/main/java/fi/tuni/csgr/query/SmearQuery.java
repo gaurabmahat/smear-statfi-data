@@ -101,16 +101,6 @@ public class SmearQuery implements Query {
     }
 
     @Override
-    public LocalDate getFromDate() {
-        return from.getDate();
-    }
-
-    @Override
-    public LocalDate getToDate() {
-        return to.getDate();
-    }
-
-    @Override
     public HashMap<String, ArrayList<String>> getSelectionData() {
         return controlPanel.getSelectionData();
     }
@@ -129,8 +119,8 @@ public class SmearQuery implements Query {
         //Get table variables from the class getTableVariable
         String tableVariables = getStationsCode();
 
-        LocalDateTime fromTime = getFromDate().atStartOfDay();
-        LocalDateTime toTime = getToDate().atTime(23, 59);
+        LocalDateTime fromTime = from.getDate().atStartOfDay();
+        LocalDateTime toTime = to.getDate().atTime(23, 59);
         String startTime = fromTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         String endTime = toTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         String aggregation = aggregationType.get(value.getSelection());
@@ -150,12 +140,12 @@ public class SmearQuery implements Query {
      * @return
      */
     @Override
-    public ResultList JsonToResult(String json) {
+    public ResultList jsonToResult(String json) {
         return resultConverter.convert(json);
     }
 
     @Override
-    public void updateGraphs(ResultList results) {
+    public void updateResults(ResultList results) {
         graphDataManager.update(results);
     }
 

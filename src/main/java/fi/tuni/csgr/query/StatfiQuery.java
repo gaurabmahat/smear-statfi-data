@@ -8,15 +8,12 @@ import fi.tuni.csgr.components.ControlPanel;
 import fi.tuni.csgr.query.resultviews.ResultView;
 import fi.tuni.csgr.managers.graphs.GraphDataManager;
 import fi.tuni.csgr.query.resultviews.StatfiResultsView;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpRequest;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -54,16 +51,6 @@ public class StatfiQuery implements  Query {
         controlPanel = new ControlPanel();
         controlPanel.addControl("years", years);
 
-    }
-
-    @Override
-    public LocalDate getFromDate() {
-        return null;
-    }
-
-    @Override
-    public LocalDate getToDate() {
-        return null;
     }
 
     @Override
@@ -107,7 +94,7 @@ public class StatfiQuery implements  Query {
      * @return
      */
     @Override
-    public ResultList JsonToResult(String json) {
+    public ResultList jsonToResult(String json) {
         return resultConverter.convert(json);
     }
 
@@ -120,7 +107,7 @@ public class StatfiQuery implements  Query {
     }
 
     @Override
-    public void updateGraphs(ResultList results) {
+    public void updateResults(ResultList results) {
         graphDataManager.update(results);
     }
 
