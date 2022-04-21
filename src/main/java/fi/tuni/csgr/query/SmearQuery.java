@@ -15,6 +15,7 @@ import fi.tuni.csgr.smearAndStatfi.SMEAR.timeAndVariablesFromSmear.SmearTimeAndV
 import fi.tuni.csgr.stationNames.Station;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 import javafx.scene.control.DatePicker;
 import javafx.scene.layout.Pane;
 
@@ -36,6 +37,7 @@ import static fi.tuni.csgr.smearAndStatfi.SMEAR.timeAndVariablesFromSmear.Predef
 public class SmearQuery implements Query {
     private static Map<String, Station> initialDataFromSmear;
     private LocalDate smallestStartDate;
+    private Alert alert;
 
     private DateSelector from;
     private DateSelector to;
@@ -94,6 +96,10 @@ public class SmearQuery implements Query {
         });
 
         smallestStartDate = LocalDate.now();
+
+        alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setResizable(true);
+        alert.setTitle("Alert");
 
         //Initial Data from Smear
         CompletableFuture<Void> smearTimeAndVariableData = CompletableFuture.runAsync(() -> {
@@ -176,6 +182,27 @@ public class SmearQuery implements Query {
 
     @Override
     public void updateResults(ResultList results) {
+        //For the Alert
+        StringBuilder alertContext = new StringBuilder("");
+        for(String gas : gas.getSelectedItems()){
+            for(String station : station.getSelectedItems()){
+                LocalDate date = initialDataFromSmear.get(station)
+                        .getStationMap()
+                        .get(gas)
+                        .getGasValues()
+                        .getStartDate();
+                if(from.getDate().compareTo(date) < 0){
+                    alertContext.append("Data for ").append(gas).append(" at station ")
+                            .append(station).append( " is not available for the selected dates!")
+                            .append("\n");
+                }
+            }
+        }
+        if(!alertContext.isEmpty()){
+            alert.setContentText(alertContext.toString());
+            alert.showAndWait();
+        }
+        //Return
         graphDataManager.update(results);
     }
 
