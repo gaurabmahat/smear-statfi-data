@@ -1,6 +1,7 @@
 package fi.tuni.csgr.query.resultviews;
 
 import fi.tuni.csgr.components.ChartView;
+import fi.tuni.csgr.components.LineChartView;
 import fi.tuni.csgr.managers.graphs.GraphDataManager;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
@@ -41,7 +42,7 @@ public class SmearResultsView implements ResultView {
                     charts.remove(name);
                 }
                 if(change.wasAdded()) {
-                    charts.put(name, new ChartView(name, (ObservableList<XYChart.Series<Long, Double>>) change.getValueAdded()));
+                    charts.put(name, new LineChartView(name, (ObservableList<XYChart.Series<Long, Double>>) change.getValueAdded()));
                     resultView.getChildren().add(charts.get(name).getChartBox());
                 }
             }

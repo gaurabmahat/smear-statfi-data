@@ -22,12 +22,10 @@ import java.net.URI;
 import java.net.http.HttpRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 import static fi.tuni.csgr.smearAndStatfi.SMEAR.timeAndVariablesFromSmear.PredefinedStationsInfo.*;
 
@@ -37,6 +35,7 @@ import static fi.tuni.csgr.smearAndStatfi.SMEAR.timeAndVariablesFromSmear.Predef
 
 public class SmearQuery implements Query {
     private static Map<String, Station> initialDataFromSmear;
+    private LocalDate smallestStartDate;
 
     private DateSelector from;
     private DateSelector to;
@@ -54,11 +53,6 @@ public class SmearQuery implements Query {
      */
 
     protected SmearQuery() {
-        CompletableFuture<Void> smearTimeAndVariableData = CompletableFuture.runAsync(() -> {
-            System.out.println("Async starts");
-            initialDataFromSmear =  SmearTimeAndVariableData.smearMapData;
-            System.out.println("Async ends");
-        });
 
         graphDataManager = new GraphDataManager();
         resultConverter = new SmearJsonToResultConverter();
@@ -79,25 +73,61 @@ public class SmearQuery implements Query {
         value.setSelection("None");
 
         controlPanel = new ControlPanel();
-        controlPanel.addControl("fromDate", from);
-        controlPanel.addControl("toDate",to);
         controlPanel.addControl("gas", gas);
         controlPanel.addControl("station", station);
         controlPanel.addControl("value", value);
-
-        // TO DO: These values should be retrieved from initialDataFromSmear
-        from.limitDatePicker(LocalDate.of(2000, Month.JANUARY, 1), LocalDate.now());
-        to.limitDatePicker(LocalDate.of(2000, Month.JANUARY, 1), LocalDate.now());
+        controlPanel.addControl("fromDate", from);
+        controlPanel.addControl("toDate",to);
 
         // Add listener to fromPicker to limit lower range of toPicker
         DatePicker fromPicker = (DatePicker)from.getControl();
         DatePicker toPicker = (DatePicker)to.getControl();
+
+        from.limitDatePicker(LocalDate.of(1997, 1, 1), LocalDate.now());
+        to.limitDatePicker(LocalDate.of(1997, 1, 1), LocalDate.now());
+
         fromPicker.valueProperty().addListener((observable, oldDate, newDate) -> {
             to.limitDatePicker(newDate, LocalDate.now());
             if (toPicker.getValue().isBefore(newDate)) {
                 toPicker.setValue(newDate);
             }
         });
+
+        smallestStartDate = LocalDate.now();
+
+        //Initial Data from Smear
+        CompletableFuture<Void> smearTimeAndVariableData = CompletableFuture.runAsync(() -> {
+                    System.out.println("Async starts");
+                    initialDataFromSmear = SmearTimeAndVariableData.smearMapData;
+                })
+                .orTimeout(50, TimeUnit.SECONDS)
+                .whenComplete((result, exception) -> {
+                    if (exception != null) {
+                        System.out.println("Cannot Connect to the Server!");
+                    } else {
+                        System.out.println("Async ended.");
+                    }
+                })
+                .thenRun(() -> {
+                    for(var key : initialDataFromSmear.keySet()){
+                        for (var gas : initialDataFromSmear.get(key).getStationMap().keySet()){
+                            LocalDate date = initialDataFromSmear.get(key)
+                                    .getStationMap()
+                                    .get(gas)
+                                    .getGasValues()
+                                    .getStartDate();
+                            if(date.compareTo(smallestStartDate) < 0)
+                            {
+                                smallestStartDate = date;
+                            }
+                        }
+                    }
+                })
+                .thenRun(() -> {
+                    // TO DO: These values should be retrieved from initialDataFromSmear
+                    from.limitDatePicker(smallestStartDate, LocalDate.now());
+                    to.limitDatePicker(smallestStartDate, LocalDate.now());
+                });
     }
 
     @Override

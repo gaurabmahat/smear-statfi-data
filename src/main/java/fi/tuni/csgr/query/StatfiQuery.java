@@ -5,19 +5,17 @@ import fi.tuni.csgr.converters.json.JsonToResultConverter;
 import fi.tuni.csgr.converters.json.ResultList;
 import fi.tuni.csgr.converters.json.StatfiJsonToResultConverter;
 import fi.tuni.csgr.components.ControlPanel;
+import fi.tuni.csgr.managers.graphs.BarGraphDataManager;
 import fi.tuni.csgr.query.resultviews.ResultView;
 import fi.tuni.csgr.managers.graphs.GraphDataManager;
 import fi.tuni.csgr.query.resultviews.StatfiResultsView;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.IntStream;
 
 /**
@@ -27,12 +25,10 @@ import java.util.stream.IntStream;
 public class StatfiQuery implements  Query {
 
     private YearSelector years;
-    private MultipleChoiceDropDown gas;
     private ControlPanel controlPanel;
-    private ToggleGroup toggleGroup;
 
     private JsonToResultConverter resultConverter;
-    private GraphDataManager graphDataManager;
+    private BarGraphDataManager graphDataManager;
     private ResultView resultView;
 
     /**
@@ -40,7 +36,7 @@ public class StatfiQuery implements  Query {
      */
     protected StatfiQuery() {
         // Initialize objects required for data fetching and conversion
-        graphDataManager = new GraphDataManager();
+        graphDataManager = new BarGraphDataManager();
         resultConverter = new StatfiJsonToResultConverter();
         // Create a resultView based on chartManager, which handles all resultView updates
         resultView = new StatfiResultsView(graphDataManager);
@@ -109,6 +105,12 @@ public class StatfiQuery implements  Query {
     @Override
     public void updateResults(ResultList results) {
         graphDataManager.update(results);
+        //Sorting the XYCharts.Series
+        for(var key : graphDataManager.getGases().keySet()){
+            for(int i = 0; i < graphDataManager.getGases().get(key).get(0).getData().size(); i++){
+                graphDataManager.getGases().get(key).get(0).getData().sort(Comparator.comparingInt(e -> Integer.parseInt(e.getXValue())));
+            }
+        }
     }
 
     /**
@@ -164,26 +166,4 @@ public class StatfiQuery implements  Query {
 
         return statfiPOSTString;
     }
-
-    /*
-    "{\n" +
-                    "        \"query\": [\n" +
-                    "            {\n" +
-                    "                \"code\": \"Tiedot\",\n" +
-                    "                \"selection\": {\n" +
-                    "                    \"filter\": \"item\",\n" +
-                    "                    \"values\": [" +
-                    "                       \"Khk_yht\",\n" +
-                            "                \"Khk_yht_index\",\n" +
-                            "                \"Khk_yht_las\",\n" +
-                            "                \"Khk_yht_las_index\"\n" +
-                    "                   ]\n" +
-                    "                }\n" +
-                    "            }\n" +
-                    "        ],\n" +
-                    "       \"response\": {" +
-                    "           \"format\": \"json-stat2\"" +
-                    "       }\n" +
-                    "    }\n";
-     */
 }
