@@ -10,7 +10,7 @@ public class QueryClient {
     public void performQuery(Query query) {
         HttpRequest request = query.getHttpRequest();
         String json = HttpRequestClient.request(request);
-        ResultList results = query.JsonToResult(json);
-        query.updateGraphs(results);
+        ResultList results = query.jsonToResult(json);
+        query.updateResults(results);
     }
 }

@@ -50,16 +50,6 @@ public class StatfiQuery implements  Query {
     }
 
     @Override
-    public LocalDate getFromDate() {
-        return null;
-    }
-
-    @Override
-    public LocalDate getToDate() {
-        return null;
-    }
-
-    @Override
     public HashMap<String, ArrayList<String>> getSelectionData() {
         return controlPanel.getSelectionData();
     }
@@ -100,7 +90,7 @@ public class StatfiQuery implements  Query {
      * @return
      */
     @Override
-    public ResultList JsonToResult(String json) {
+    public ResultList jsonToResult(String json) {
         return resultConverter.convert(json);
     }
 
@@ -113,7 +103,7 @@ public class StatfiQuery implements  Query {
     }
 
     @Override
-    public void updateGraphs(ResultList results) {
+    public void updateResults(ResultList results) {
         graphDataManager.update(results);
         //Sorting the XYCharts.Series
         for(var key : graphDataManager.getGases().keySet()){
