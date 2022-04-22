@@ -4,6 +4,8 @@
 This project uses Java SDK 17, JavaFX 17.0.2 and Maven as a project management tool.
 The common IDE for which later instructions are provided is IntelliJ.
 
+[The design document](FinalDesignDocument.pdf) describes the architecture of the system and the design decisions.
+
 ### Prerequisites
 - [JDK 17](https://www.oracle.com/java/technologies/downloads/)
 - [IntelliJ IDEA 2021.3.2 (Community Edition)](https://www.jetbrains.com/idea/download/)
