@@ -1,7 +1,7 @@
 package fi.tuni.csgr.managers.graphs;
 
 import fi.tuni.csgr.converters.json.ResultList;
-import fi.tuni.csgr.utils.Aggregates;
+import fi.tuni.csgr.utils.SmearAggregates;
 import javafx.collections.*;
 import javafx.scene.chart.XYChart;
 
@@ -92,7 +92,7 @@ public class GraphDataManager {
             System.out.println("The aggregates cannot be displayed as the data in the series is empty");
         }
         else {
-            Aggregates agg = new Aggregates();
+            SmearAggregates agg = new SmearAggregates();
             agg.findMaximum(seriesData);
             agg.findMinimum(seriesData);
             agg.findAverage(seriesData);
