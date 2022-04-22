@@ -16,12 +16,12 @@ import java.util.HashMap;
  * to display query results.
  */
 
-public class SmearResultsView implements ResultView {
+public class MultiGraphView implements ResultView {
     private GraphDataManager graphDataManager;
     private HashMap<String, ChartView> charts;
     private VBox resultView;
 
-    public SmearResultsView(GraphDataManager dataManager) {
+    public MultiGraphView(GraphDataManager dataManager) {
         graphDataManager = dataManager;
         charts = new HashMap<>();
         resultView = new VBox();

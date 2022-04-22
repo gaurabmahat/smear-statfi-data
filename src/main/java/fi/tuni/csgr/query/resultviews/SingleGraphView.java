@@ -3,7 +3,6 @@ package fi.tuni.csgr.query.resultviews;
 import fi.tuni.csgr.components.BarChartView;
 import fi.tuni.csgr.components.ChartView;
 import fi.tuni.csgr.managers.graphs.BarGraphDataManager;
-import fi.tuni.csgr.managers.graphs.GraphDataManager;
 import fi.tuni.csgr.smearAndStatfi.SMEAR.timeAndVariablesFromSmear.PredefinedStationsInfo;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -22,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class StatfiResultsView implements ResultView{
+public class SingleGraphView implements ResultView{
     private BarGraphDataManager graphDataManager;
     private ObservableMap<String, ObservableList<XYChart.Series<String, Double>>> gases;
     private HashMap<String, ChartView> charts;
@@ -32,7 +31,7 @@ public class StatfiResultsView implements ResultView{
     private ToggleGroup toggleGroup;
     private RadioButton radioButton1;
 
-    public StatfiResultsView(BarGraphDataManager dataManager) {
+    public SingleGraphView(BarGraphDataManager dataManager) {
         graphDataManager = dataManager;
         charts = new HashMap<>();
         resultView = new VBox();

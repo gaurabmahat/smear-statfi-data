@@ -9,7 +9,7 @@ import fi.tuni.csgr.converters.json.ResultList;
 import fi.tuni.csgr.converters.json.SmearJsonToResultConverter;
 import fi.tuni.csgr.components.ControlPanel;
 import fi.tuni.csgr.query.resultviews.ResultView;
-import fi.tuni.csgr.query.resultviews.SmearResultsView;
+import fi.tuni.csgr.query.resultviews.MultiGraphView;
 import fi.tuni.csgr.managers.graphs.GraphDataManager;
 import fi.tuni.csgr.smearAndStatfi.SMEAR.timeAndVariablesFromSmear.SmearTimeAndVariableData;
 import fi.tuni.csgr.stationNames.Station;
@@ -59,7 +59,7 @@ public class SmearQuery implements Query {
         graphDataManager = new GraphDataManager();
         resultConverter = new SmearJsonToResultConverter();
         // Create a resultView based on chartManager, which handles all resultView updates
-        resultView = new SmearResultsView(graphDataManager);
+        resultView = new MultiGraphView(graphDataManager);
 
         // Set variables in dropdowns
         ObservableList<String> stationList = FXCollections.observableArrayList(stationNameTableVariableName.keySet());
