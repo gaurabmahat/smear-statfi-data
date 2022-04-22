@@ -7,14 +7,12 @@ import fi.tuni.csgr.converters.json.StatfiJsonToResultConverter;
 import fi.tuni.csgr.components.ControlPanel;
 import fi.tuni.csgr.managers.graphs.BarGraphDataManager;
 import fi.tuni.csgr.query.resultviews.ResultView;
-import fi.tuni.csgr.managers.graphs.GraphDataManager;
-import fi.tuni.csgr.query.resultviews.StatfiResultsView;
+import fi.tuni.csgr.query.resultviews.SingleGraphView;
 import javafx.scene.layout.Pane;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpRequest;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -39,7 +37,7 @@ public class StatfiQuery implements  Query {
         graphDataManager = new BarGraphDataManager();
         resultConverter = new StatfiJsonToResultConverter();
         // Create a resultView based on chartManager, which handles all resultView updates
-        resultView = new StatfiResultsView(graphDataManager);
+        resultView = new SingleGraphView(graphDataManager);
 
         // Create UI components and add to list of components
         years = new YearSelector(1990, 2016, "Years", true);
