@@ -1,6 +1,7 @@
 package fi.tuni.csgr.managers.graphs;
 
 import fi.tuni.csgr.converters.json.ResultList;
+import fi.tuni.csgr.utils.StatfiAggregates;
 import javafx.collections.*;
 import javafx.scene.chart.XYChart;
 
@@ -86,6 +87,15 @@ public class BarGraphDataManager {
         ObservableList<XYChart.Data<String, Double>> seriesData = stationSeries.getData();
         seriesData.clear();
         seriesData.addAll(data);
+        if(seriesData.isEmpty()){
+            System.out.println("The aggregates cannot be displayed as the data in the series is empty");
+        }
+        else {
+            StatfiAggregates agg = new StatfiAggregates();
+            agg.findMaximum(seriesData);
+            agg.findMinimum(seriesData);
+            agg.findAverage(seriesData);
+        }
 
         return seriesData;
     }
